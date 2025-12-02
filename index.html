@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>טופס הקמת לקוח - B1 Business</title>
+    <title>טופס הקמת לקוח מלא - B1 Business</title>
     <style>
         * {
             margin: 0;
@@ -17,351 +17,385 @@
             --yellow: #fdf76e;
             --yellow-dark: #e8e156;
             --white: #ffffff;
+            --gray-bg: #efefef;
             --gray-light: #f5f5f5;
             --gray-medium: #e0e0e0;
             --gray-dark: #333333;
+            --black: #000000;
             --red: #dc3545;
-            --border-radius: 8px;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #efefef;
+            background: var(--gray-bg);
             padding: 2rem 1rem;
             color: var(--gray-dark);
-            line-height: 1.6;
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1000px;
+            width: 100%;
             margin: 0 auto;
             background: var(--white);
+            border: 3px solid var(--black);
             border-radius: 12px;
-            border: 3px solid #333333;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            overflow: hidden;
         }
 
-        /* Header */
         .header {
-            background: linear-gradient(135deg, var(--green-primary) 0%, var(--green-dark) 100%);
+            background: linear-gradient(135deg, var(--green-primary), var(--green-dark));
             color: var(--white);
             padding: 2rem;
             text-align: center;
+            border-bottom: 3px solid var(--black);
         }
 
         .header h1 {
-            font-size: 1.8rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .header p {
-            font-size: 1rem;
-            opacity: 0.95;
-        }
-
-        /* Progress Bar */
-        .progress-container {
-            height: 4px;
-            background: var(--gray-medium);
-            position: relative;
+            font-size: 2rem;
+            font-weight: 700;
         }
 
         .progress-bar {
+            height: 6px;
+            background: var(--gray-medium);
+        }
+
+        .progress-fill {
             height: 100%;
             background: var(--green-primary);
             width: 0%;
-            transition: width 0.3s ease;
+            transition: width 0.4s ease;
         }
 
-        /* Form Content */
         .form-content {
             padding: 2rem;
         }
 
-        /* Section */
-        .section {
-            margin-bottom: 2.5rem;
+        .accordion-section {
+            margin-bottom: 1rem;
+            border: 2px solid var(--gray-medium);
+            border-radius: 8px;
+            position: relative;
+            z-index: 1;
         }
 
-        .section-title {
+        .accordion-section.active {
+            z-index: 10;
+        }
+
+        .accordion-section.active {
+            border-color: var(--green-primary);
+        }
+
+        .accordion-section.filling {
+            border-color: var(--green-primary);
+            background: rgba(32, 216, 91, 0.02);
+        }
+
+        .accordion-header {
+            background: var(--gray-light);
+            padding: 1.25rem 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            position: relative;
+            gap: 1rem;
+        }
+
+        .accordion-section.active .accordion-header {
+            background: var(--green-primary);
+            color: var(--white);
+        }
+
+        .accordion-title {
             font-size: 1.3rem;
             font-weight: 600;
-            color: var(--gray-dark);
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid var(--green-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex: 1;
+            flex-wrap: wrap;
+            word-break: break-word;
         }
 
-        /* Form Grid */
+        .accordion-icon {
+            font-size: 1.5rem;
+            transition: transform 0.3s;
+            flex-shrink: 0;
+            min-width: 1.5rem;
+        }
+
+        .accordion-section.active .accordion-icon {
+            transform: rotate(45deg);
+        }
+
+        .requirement-badge {
+            font-size: 0.75rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .requirement-badge.required {
+            background: var(--red);
+            color: var(--white);
+        }
+
+        .requirement-badge.optional {
+            background: var(--gray-dark);
+            color: var(--white);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: visible;
+            transition: max-height 0.4s ease;
+        }
+
+        .accordion-section.active .accordion-content {
+            max-height: 5000px;
+        }
+
+        .accordion-body {
+            padding: 2rem;
+            padding-right: 2.5rem;
+            padding-left: 2.5rem;
+        }
+
         .form-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 1.5rem;
         }
 
-        .form-grid.single {
-            grid-template-columns: 1fr;
+        .form-grid.three {
+            grid-template-columns: repeat(3, 1fr);
         }
 
-        /* Form Group */
         .form-group {
             display: flex;
             flex-direction: column;
-        }
-
-        .form-group.full-width {
-            grid-column: 1 / -1;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
         }
 
         .form-label {
             font-size: 0.95rem;
-            font-weight: 500;
-            color: var(--gray-dark);
+            font-weight: 600;
             margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
         }
 
-        .required {
+        .required-star {
             color: var(--red);
-            margin-left: 0.25rem;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            width: 0.5rem;
         }
 
-        /* Form Input */
-        .form-input,
-        .form-select,
-        .form-textarea {
-            padding: 0.75rem;
+        .form-input {
+            padding: 0.875rem;
             border: 2px solid var(--gray-medium);
-            border-radius: var(--border-radius);
+            border-radius: 8px;
             font-size: 1rem;
-            font-family: inherit;
-            transition: border-color 0.2s ease;
-            background: var(--white);
         }
 
-        .form-input:focus,
-        .form-select:focus,
-        .form-textarea:focus {
+        .form-input:focus {
             outline: none;
             border-color: var(--green-primary);
         }
 
-        .form-input.error,
-        .form-select.error {
-            border-color: var(--red);
-        }
-
-        .form-textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .error-message {
-            color: var(--red);
-            font-size: 0.85rem;
-            margin-top: 0.25rem;
-            display: none;
-        }
-
-        .form-input.error + .error-message,
-        .form-select.error + .error-message {
-            display: block;
-        }
-
-        /* Radio & Checkbox Groups */
-        .radio-group,
-        .checkbox-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .radio-option,
-        .checkbox-option {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem;
-            border: 2px solid var(--gray-medium);
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .radio-option:hover,
-        .checkbox-option:hover {
+        .form-input.filling {
             border-color: var(--green-primary);
-            background: rgba(32, 216, 91, 0.05);
+            background: rgba(32, 216, 91, 0.02);
         }
 
-        .radio-option input[type="radio"],
-        .checkbox-option input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
+        .file-upload {
+            border: 2px dashed var(--gray-medium);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
             cursor: pointer;
+            background: var(--gray-light);
+            display: block;
+            overflow: visible;
         }
 
-        .radio-option input[type="radio"]:checked + label,
-        .checkbox-option input[type="checkbox"]:checked + label {
-            font-weight: 600;
-            color: var(--green-primary);
+        .file-upload:hover {
+            border-color: var(--green-primary);
         }
 
-        .radio-option.selected,
-        .checkbox-option.selected {
+        .file-upload.has-file {
             border-color: var(--green-primary);
             background: rgba(32, 216, 91, 0.1);
         }
 
-        /* Conditional Fields */
-        .conditional-field {
+        .file-upload input {
             display: none;
-            margin-top: 1rem;
+        }
+
+        .option-card {
+            border: 2px solid var(--gray-medium);
+            border-radius: 8px;
             padding: 1rem;
-            background: var(--gray-light);
-            border-radius: var(--border-radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
         }
 
-        .conditional-field.show {
-            display: block;
+        .option-card:hover {
+            border-color: var(--green-primary);
         }
 
-        /* Working Hours */
-        .day-row {
+        .option-card.selected {
+            border-color: var(--green-primary);
+            background: rgba(32, 216, 91, 0.1);
+            border-width: 3px;
+        }
+
+        .option-card input {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--green-primary);
+        }
+
+        .time-slot {
             display: grid;
-            grid-template-columns: auto 1fr 1fr 1fr;
+            grid-template-columns: auto 120px 150px 150px;
             gap: 1rem;
             align-items: center;
             padding: 1rem;
             background: var(--gray-light);
-            border-radius: var(--border-radius);
+            border-radius: 8px;
+            border: 2px solid var(--gray-medium);
             margin-bottom: 0.75rem;
         }
 
-        .day-checkbox {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+        .time-slot.active {
+            border-color: var(--green-primary);
+            background: rgba(32, 216, 91, 0.05);
         }
 
-        .day-checkbox input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-        }
-
-        .day-name {
-            font-weight: 500;
-            min-width: 80px;
-        }
-
-        .time-input {
+        .time-slot input[type="time"] {
             padding: 0.5rem;
             border: 2px solid var(--gray-medium);
-            border-radius: var(--border-radius);
-            font-size: 0.95rem;
+            border-radius: 8px;
         }
 
-        .time-input:disabled {
-            background: #f9f9f9;
-            cursor: not-allowed;
-            color: #999;
-        }
-
-        .closed-text {
-            grid-column: 2 / -1;
-            color: #999;
-            font-style: italic;
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
             display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
         }
 
-        /* Delivery Zones */
-        .zones-container {
+        .modal-overlay.show {
             display: flex;
-            flex-direction: column;
-            gap: 1rem;
         }
 
-        .zone-item {
-            display: grid;
-            grid-template-columns: 2fr 1fr auto;
-            gap: 1rem;
-            align-items: end;
-            padding: 1rem;
-            background: var(--gray-light);
-            border-radius: var(--border-radius);
+        .modal {
+            background: var(--white);
+            border-radius: 12px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 3px solid var(--green-primary);
+        }
+
+        .modal-header {
+            background: var(--green-primary);
+            color: var(--white);
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .branch-item {
+            border: 2px solid var(--gray-medium);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .branch-number {
+            position: absolute;
+            top: -12px;
+            right: 12px;
+            background: var(--green-primary);
+            color: var(--white);
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-weight: 600;
         }
 
         .btn-remove {
-            padding: 0.75rem 1rem;
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            padding: 0.5rem 1rem;
             background: var(--red);
             color: var(--white);
             border: none;
-            border-radius: var(--border-radius);
+            border-radius: 8px;
             cursor: pointer;
-            font-weight: 500;
-            transition: background 0.2s ease;
-        }
-
-        .btn-remove:hover {
-            background: #c82333;
         }
 
         .btn-add {
             width: 100%;
-            padding: 0.875rem;
+            padding: 1rem;
             background: var(--green-primary);
             color: var(--white);
             border: none;
-            border-radius: var(--border-radius);
+            border-radius: 8px;
             cursor: pointer;
             font-size: 1rem;
             font-weight: 600;
-            margin-top: 1rem;
-            transition: background 0.2s ease;
-        }
-
-        .btn-add:hover {
-            background: var(--green-dark);
-        }
-
-        /* Submit Button */
-        .submit-section {
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 2px solid var(--gray-medium);
         }
 
         .btn-submit {
             width: 100%;
-            padding: 1.25rem;
+            padding: 1.5rem;
             background: var(--yellow);
             color: var(--gray-dark);
-            border: none;
-            border-radius: var(--border-radius);
+            border: 3px solid var(--black);
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 1.125rem;
+            font-size: 1.25rem;
             font-weight: 700;
-            transition: background 0.2s ease;
+            text-transform: uppercase;
         }
 
-        .btn-submit:hover {
-            background: var(--yellow-dark);
-        }
-
-        .btn-submit:disabled {
-            background: var(--gray-medium);
-            cursor: not-allowed;
-        }
-
-        /* Success Message */
         .success-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.7);
             display: none;
             justify-content: center;
             align-items: center;
@@ -372,788 +406,646 @@
             display: flex;
         }
 
-        .success-message {
+        .success-box {
             background: var(--white);
-            padding: 2rem;
+            padding: 3rem;
             border-radius: 12px;
             text-align: center;
-            max-width: 400px;
+            border: 3px solid var(--green-primary);
         }
 
         .success-icon {
-            font-size: 4rem;
+            font-size: 5rem;
             color: var(--green-primary);
-            margin-bottom: 1rem;
         }
 
-        /* Responsive */
+        /* הסתרת פיקסלים וscripts חיצוניים */
+        script,
+        noscript,
+        [data-pixel],
+        [data-gtag],
+        iframe[src*="facebook"],
+        iframe[src*="google"],
+        iframe[src*="analytics"] {
+            display: none !important;
+            visibility: hidden !important;
+            position: absolute !important;
+            z-index: -9999 !important;
+        }
+
         @media (max-width: 768px) {
             body {
                 padding: 1rem 0.5rem;
             }
 
+            .container {
+                border-width: 2px;
+            }
+
+            .accordion-section {
+                position: relative;
+                z-index: 1;
+                margin-bottom: 3rem;
+                overflow: visible;
+            }
+
+            .accordion-section.active {
+                z-index: 100;
+                margin-bottom: 3rem;
+                overflow: visible;
+            }
+
+            .header {
+                padding: 1.5rem 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
             .form-content {
-                padding: 1.5rem;
+                padding: 1rem;
             }
 
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .day-row {
-                grid-template-columns: 1fr;
+            .accordion-header {
+                padding: 1rem;
+                flex-direction: column;
+                align-items: flex-start;
                 gap: 0.5rem;
             }
 
-            .zone-item {
+            .accordion-title {
+                font-size: 1.1rem;
+            }
+
+            .requirement-badge {
+                align-self: flex-end;
+                position: absolute;
+                top: 1rem;
+                left: 1rem;
+            }
+
+            .accordion-header {
+                padding: 1rem 1rem;
+            }
+
+            .accordion-content {
+                overflow: visible !important;
+            }
+
+            .accordion-body {
+                overflow: visible !important;
+            }
+
+            .form-grid, 
+            .form-grid.three {
                 grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .option-card {
+                padding: 0.75rem;
+                font-size: 0.9rem;
+            }
+
+            .time-slot {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+                padding: 0.75rem;
+            }
+
+            .file-upload {
+                padding: 1.5rem 1rem;
+            }
+
+            .btn-submit {
+                padding: 1.25rem;
+                font-size: 1.1rem;
+            }
+
+            .modal {
+                width: 95%;
+                max-height: 90vh;
+            }
+
+            .modal-body {
+                padding: 1rem;
+            }
+
+            .branch-item {
+                padding: 1rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Success Overlay -->
     <div class="success-overlay" id="successOverlay">
-        <div class="success-message">
+        <div class="success-box">
             <div class="success-icon">✓</div>
-            <h2 style="margin-bottom: 0.5rem;">הטופס נשלח בהצלחה!</h2>
-            <p style="color: #666;">הנתונים נשמרו במערכת</p>
+            <h2>הטופס נשלח בהצלחה!</h2>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="branchesModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>סניפים נוספים</h2>
+                <button class="modal-close" onclick="closeBranchesModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div id="branchesContainer"></div>
+                <button type="button" class="btn-add" onclick="addBranch()">+ הוסף סניף</button>
+            </div>
         </div>
     </div>
 
     <div class="container">
-        <!-- Header -->
         <div class="header">
-            <h1>טופס הקמת לקוח חדש</h1>
+            <h1>🏪 טופס הקמת לקוח מלא</h1>
             <p>מלא את כל הפרטים בקפידה</p>
         </div>
 
-        <!-- Progress Bar -->
-        <div class="progress-container">
-            <div class="progress-bar" id="progressBar"></div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar"></div>
         </div>
 
-        <!-- Form -->
         <form class="form-content" id="businessForm">
             
             <!-- 1. פרטי העסק -->
-            <div class="section">
-                <h2 class="section-title">פרטי בית העסק</h2>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label class="form-label">
-                            <span class="required">*</span>
-                            שם בית העסק
-                        </label>
-                        <input type="text" class="form-input" id="businessName" required>
-                        <span class="error-message">שדה חובה</span>
+            <div class="accordion-section active" data-section="business" data-required="true">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">
+                        <span class="accordion-icon">+</span>
+                        <span>פרטי בית העסק</span>
                     </div>
-
-                    <div class="form-group">
-                        <label class="form-label">
-                            <span class="required">*</span>
-                            כתובת בית העסק
-                        </label>
-                        <input type="text" class="form-input" id="businessAddress" required>
-                        <span class="error-message">שדה חובה</span>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">
-                            <span class="required">*</span>
-                            טלפון
-                        </label>
-                        <input type="tel" class="form-input" id="businessPhone" placeholder="050-1234567" required>
-                        <span class="error-message">נא להזין מספר טלפון תקין</span>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">
-                            <span class="required">*</span>
-                            מייל
-                        </label>
-                        <input type="email" class="form-input" id="businessEmail" placeholder="example@mail.com" required>
-                        <span class="error-message">נא להזין כתובת מייל תקינה</span>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">
-                            <span class="required">*</span>
-                            שם איש קשר
-                        </label>
-                        <input type="text" class="form-input" id="contactName" required>
-                        <span class="error-message">שדה חובה</span>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">
-                            <span class="required">*</span>
-                            טלפון איש קשר
-                        </label>
-                        <input type="tel" class="form-input" id="contactPhone" placeholder="050-1234567" required>
-                        <span class="error-message">נא להזין מספר טלפון תקין</span>
+                    <span class="requirement-badge required">חובה</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <span class="required-star">*</span> שם בית העסק
+                                </label>
+                                <input type="text" class="form-input" id="businessName" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <span class="required-star">*</span> כתובת
+                                </label>
+                                <input type="text" class="form-input" id="businessAddress" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <span class="required-star">*</span> טלפון
+                                </label>
+                                <input type="tel" class="form-input" id="businessPhone" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <span class="required-star">*</span> מייל
+                                </label>
+                                <input type="email" class="form-input" id="businessEmail" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <span class="required-star">*</span> שם איש קשר
+                                </label>
+                                <input type="text" class="form-input" id="contactName" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <span class="required-star">*</span> טלפון איש קשר
+                                </label>
+                                <input type="tel" class="form-input" id="contactPhone" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <span class="required-star">*</span> טלפון איש קשר לזמנות
+                                </label>
+                                <input type="tel" class="form-input" id="contactPhoneOrders" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">האם יש סניפים נוספים?</label>
+                                <div class="form-grid">
+                                    <label class="option-card">
+                                        <input type="radio" name="hasBranches" value="no" id="noBranches" checked>
+                                        <span>לא</span>
+                                    </label>
+                                    <label class="option-card">
+                                        <input type="radio" name="hasBranches" value="yes" id="yesBranches">
+                                        <span>כן</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 2. רשתות חברתיות -->
-            <div class="section">
-                <h2 class="section-title">רשתות חברתיות (אופציונלי)</h2>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label class="form-label">אתר אינטרנט</label>
-                        <input type="url" class="form-input" id="website" placeholder="https://example.com">
+            <!-- 2. צרף קבצים -->
+            <div class="accordion-section" data-section="files">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">
+                        <span class="accordion-icon">+</span>
+                        <span>צרף קבצים</span>
                     </div>
-
-                    <div class="form-group">
-                        <label class="form-label">דף פייסבוק</label>
-                        <input type="url" class="form-input" id="facebook" placeholder="https://facebook.com/...">
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">אינסטגרם</label>
-                        <input type="text" class="form-input" id="instagram" placeholder="@username">
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">טיקטוק</label>
-                        <input type="text" class="form-input" id="tiktok" placeholder="@username">
+                    <span class="requirement-badge optional">אופציונלי</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <div class="form-grid" style="grid-template-columns: 1fr;">
+                            <div class="form-group">
+                                <label class="form-label">לוגו העסק</label>
+                                <label class="file-upload" id="logoUpload">
+                                    <input type="file" id="logoFile" accept="image/*">
+                                    <span style="font-size: 3rem;">📁</span>
+                                    <p>לחץ לבחירת קובץ</p>
+                                    <div id="logoFileName"></div>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">תקנון האתר</label>
+                                <label class="file-upload" id="termsUpload">
+                                    <input type="file" id="termsFile" accept=".pdf,.doc,.docx">
+                                    <span style="font-size: 3rem;">📄</span>
+                                    <p>לחץ לבחירת קובץ</p>
+                                    <div id="termsFileName"></div>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">הצהרת נגישות</label>
+                                <label class="file-upload" id="accessibilityUpload">
+                                    <input type="file" id="accessibilityFile" accept=".pdf,.doc,.docx">
+                                    <span style="font-size: 3rem;">♿</span>
+                                    <p>לחץ לבחירת קובץ</p>
+                                    <div id="accessibilityFileName"></div>
+                                </label>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- 3. סוג עסק -->
-            <div class="section">
-                <h2 class="section-title">סוג עסק</h2>
-                <div class="form-grid single">
-                    <div class="form-group">
-                        <label class="form-label">
-                            <span class="required">*</span>
-                            בחר סוג עסק
-                        </label>
-                        <div class="radio-group">
-                            <label class="radio-option">
+            <div class="accordion-section" data-section="businessType" data-required="true">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">
+                        <span class="accordion-icon">+</span>
+                        <span>סוג עסק</span>
+                    </div>
+                    <span class="requirement-badge required">חובה</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <div class="form-grid">
+                            <label class="option-card">
                                 <input type="radio" name="businessType" value="company" id="typeCompany" required>
-                                <label for="typeCompany">חברה בע"מ</label>
+                                <span>חברה בע"מ</span>
                             </label>
-                            <label class="radio-option">
+                            <label class="option-card">
                                 <input type="radio" name="businessType" value="authorized" id="typeAuthorized">
-                                <label for="typeAuthorized">עוסק מורשה</label>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="conditional-field" id="companyNumberField">
-                        <div class="form-group">
-                            <label class="form-label">
-                                <span class="required">*</span>
-                                מספר חברה
-                            </label>
-                            <input type="text" class="form-input" id="companyNumber">
-                        </div>
-                    </div>
-
-                    <div class="conditional-field" id="authorizedNumberField">
-                        <div class="form-group">
-                            <label class="form-label">
-                                <span class="required">*</span>
-                                מספר עוסק מורשה
-                            </label>
-                            <input type="text" class="form-input" id="authorizedNumber">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 4. פרטי רו -->
-            <div class="section">
-                <h2 class="section-title">פרטי רו (RO)</h2>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label class="form-label">
-                            <span class="required">*</span>
-                            מספר רו
-                        </label>
-                        <input type="text" class="form-input" id="roNumber" required>
-                        <span class="error-message">שדה חובה</span>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">
-                            <span class="required">*</span>
-                            שם רו
-                        </label>
-                        <input type="text" class="form-input" id="roName" required>
-                        <span class="error-message">שדה חובה</span>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">
-                            <span class="required">*</span>
-                            טלפון רו
-                        </label>
-                        <input type="tel" class="form-input" id="roPhone" placeholder="050-1234567" required>
-                        <span class="error-message">נא להזין מספר טלפון תקין</span>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">
-                            <span class="required">*</span>
-                            מייל רו
-                        </label>
-                        <input type="email" class="form-input" id="roEmail" placeholder="ro@example.com" required>
-                        <span class="error-message">נא להזין כתובת מייל תקינה</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 5. קופות -->
-            <div class="section">
-                <h2 class="section-title">קופות קיימות</h2>
-                <div class="form-grid single">
-                    <div class="form-group">
-                        <label class="form-label">
-                            <span class="required">*</span>
-                            בחר לפחות קופה אחת
-                        </label>
-                        <div class="checkbox-group">
-                            <label class="checkbox-option">
-                                <input type="checkbox" name="cashRegister" value="cash" id="cashCash">
-                                <label for="cashCash">כספית (Cash)</label>
-                            </label>
-                            <label class="checkbox-option">
-                                <input type="checkbox" name="cashRegister" value="aviiv" id="cashAviiv">
-                                <label for="cashAviiv">אביב (Aviiv POS)</label>
-                            </label>
-                            <label class="checkbox-option">
-                                <input type="checkbox" name="cashRegister" value="comcash" id="cashComcash">
-                                <label for="cashComcash">קומקס (Comcash)</label>
-                            </label>
-                            <label class="checkbox-option">
-                                <input type="checkbox" name="cashRegister" value="presto" id="cashPresto">
-                                <label for="cashPresto">פרסטו / אחר (Presto / Other)</label>
-                            </label>
-                        </div>
-                        <span class="error-message" id="cashRegisterError">נא לבחור לפחות קופה אחת</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 6. אפשרויות תשלום -->
-            <div class="section">
-                <h2 class="section-title">אפשרויות תשלום</h2>
-                <div class="form-grid single">
-                    <div class="form-group">
-                        <label class="form-label">
-                            <span class="required">*</span>
-                            בחר אפשרות תשלום
-                        </label>
-                        <div class="radio-group">
-                            <label class="radio-option">
-                                <input type="radio" name="customerType" value="private" id="typePrivate" required>
-                                <label for="typePrivate">לקוח פרטי (Private Customer)</label>
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="customerType" value="business" id="typeBusiness">
-                                <label for="typeBusiness">לקוח עסקי (Business Customer)</label>
+                                <span>עוסק מורשה</span>
                             </label>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 7. שעות פעילות -->
-            <div class="section">
-                <h2 class="section-title">שעות פעילות</h2>
-                <div id="workingHoursContainer">
-                    <!-- Days will be generated by JS -->
+            <!-- 4. קופות (9) -->
+            <div class="accordion-section" data-section="cashRegisters" data-required="true">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">
+                        <span class="accordion-icon">+</span>
+                        <span>קופות קיימות</span>
+                    </div>
+                    <span class="requirement-badge required">חובה</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <div class="form-grid three">
+                            <label class="option-card">
+                                <input type="checkbox" name="cashRegister" value="caspit">
+                                <span>כספית</span>
+                            </label>
+                            <label class="option-card">
+                                <input type="checkbox" name="cashRegister" value="aviiv">
+                                <span>אביב POS</span>
+                            </label>
+                            <label class="option-card">
+                                <input type="checkbox" name="cashRegister" value="comcash">
+                                <span>קומקס</span>
+                            </label>
+                            <label class="option-card">
+                                <input type="checkbox" name="cashRegister" value="presto">
+                                <span>פרסטו</span>
+                            </label>
+                            <label class="option-card">
+                                <input type="checkbox" name="cashRegister" value="gitam">
+                                <span>גיתם</span>
+                            </label>
+                            <label class="option-card">
+                                <input type="checkbox" name="cashRegister" value="michlol">
+                                <span>מכלול</span>
+                            </label>
+                            <label class="option-card">
+                                <input type="checkbox" name="cashRegister" value="matrix">
+                                <span>מטריקס</span>
+                            </label>
+                            <label class="option-card">
+                                <input type="checkbox" name="cashRegister" value="next">
+                                <span>נקסט</span>
+                            </label>
+                            <label class="option-card">
+                                <input type="checkbox" name="cashRegister" value="other">
+                                <span>אחר</span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- 8. שעות משלוח -->
-            <div class="section">
-                <h2 class="section-title">שעות משלוח (אופציונלי)</h2>
-                <div id="deliveryHoursContainer">
-                    <!-- Days will be generated by JS -->
+            <!-- 5. תשלום -->
+            <div class="accordion-section" data-section="payment" data-required="true">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">
+                        <span class="accordion-icon">+</span>
+                        <span>אפשרויות תשלום</span>
+                    </div>
+                    <span class="requirement-badge required">חובה</span>
                 </div>
-            </div>
-
-            <!-- 9. אזורי משלוח -->
-            <div class="section">
-                <h2 class="section-title">אזורי משלוח (אופציונלי)</h2>
-                <div class="zones-container" id="zonesContainer">
-                    <!-- Zones will be added dynamically -->
-                </div>
-                <button type="button" class="btn-add" id="addZoneBtn">+ הוסף אזור משלוח</button>
-            </div>
-
-            <!-- 10. שדות נוספים -->
-            <div class="section">
-                <h2 class="section-title">מידע נוסף (אופציונלי)</h2>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label class="form-label">עלות משלוח ברירת מחדל (₪)</label>
-                        <input type="number" class="form-input" id="defaultDelivery" placeholder="25" min="0" step="0.01">
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">מינימום הזמנה (₪)</label>
-                        <input type="number" class="form-input" id="minOrder" placeholder="50" min="0" step="0.01">
-                    </div>
-
-                    <div class="form-group full-width">
-                        <label class="form-label">משלוח חינם מסכום (₪)</label>
-                        <input type="number" class="form-input" id="freeDelivery" placeholder="200" min="0" step="0.01">
-                    </div>
-
-                    <div class="form-group full-width">
-                        <label class="form-label">הערות כלליות</label>
-                        <textarea class="form-textarea" id="notes" placeholder="הערות נוספות..."></textarea>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <div class="form-grid three">
+                            <label class="option-card">
+                                <input type="checkbox" name="payment" value="credit">
+                                <span>אשראי</span>
+                            </label>
+                            <label class="option-card">
+                                <input type="checkbox" name="payment" value="check">
+                                <span>צ'ק</span>
+                            </label>
+                            <label class="option-card">
+                                <input type="checkbox" name="payment" value="cash">
+                                <span>מזומן</span>
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Submit -->
-            <div class="submit-section">
-                <button type="submit" class="btn-submit" id="submitBtn">שלח טופס</button>
+            <!-- 6. סוג לקוח -->
+            <div class="accordion-section" data-section="customerType" data-required="true">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">
+                        <span class="accordion-icon">+</span>
+                        <span>סוג לקוח</span>
+                    </div>
+                    <span class="requirement-badge required">חובה</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <div class="form-grid three">
+                            <label class="option-card">
+                                <input type="radio" name="customerType" value="business" required>
+                                <span>עסקי</span>
+                            </label>
+                            <label class="option-card">
+                                <input type="radio" name="customerType" value="private">
+                                <span>פרטי</span>
+                            </label>
+                            <label class="option-card">
+                                <input type="radio" name="customerType" value="both">
+                                <span>שניהם</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. שעות -->
+            <div class="accordion-section" data-section="hours" data-required="true">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">
+                        <span class="accordion-icon">+</span>
+                        <span>שעות פעילות</span>
+                    </div>
+                    <span class="requirement-badge required">חובה</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <div id="hoursContainer"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8. ליקוט -->
+            <div class="accordion-section" data-section="picking" data-required="true">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">
+                        <span class="accordion-icon">+</span>
+                        <span>ליקוט הזמנות</span>
+                    </div>
+                    <span class="requirement-badge required">חובה</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <div class="form-grid">
+                            <label class="option-card">
+                                <input type="radio" name="picking" value="yes" required>
+                                <span>כן</span>
+                            </label>
+                            <label class="option-card">
+                                <input type="radio" name="picking" value="no">
+                                <span>לא</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 9. פיקסלים -->
+            <div class="accordion-section" data-section="pixels">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">
+                        <span class="accordion-icon">+</span>
+                        <span>פיקסלים - רשתות חברתיות</span>
+                    </div>
+                    <span class="requirement-badge optional">אופציונלי</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Facebook Pixel</label>
+                                <input type="text" class="form-input" id="fbPixel">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Google Analytics</label>
+                                <input type="text" class="form-input" id="gaPixel">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">TikTok Pixel</label>
+                                <input type="text" class="form-input" id="ttPixel">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Google Tag Manager</label>
+                                <input type="text" class="form-input" id="gtmPixel">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem; padding-top: 2rem; border-top: 3px solid var(--gray-medium);">
+                <button type="submit" class="btn-submit">📤 שלח טופס</button>
             </div>
 
         </form>
     </div>
 
     <script>
-        // Initialize
+        let branchCount = 0;
+
         document.addEventListener('DOMContentLoaded', function() {
-            initBusinessType();
-            initWorkingHours();
-            initDeliveryHours();
-            initDeliveryZones();
-            initCashRegisters();
-            initRadioOptions();
-            initFormValidation();
-            initProgressBar();
+            initAccordions();
+            initFileUploads();
+            initOptions();
+            initBranches();
+            initHours();
+            initFillingIndicators();
+            initForm();
         });
 
-        // Business Type Toggle
-        function initBusinessType() {
-            const typeCompany = document.getElementById('typeCompany');
-            const typeAuthorized = document.getElementById('typeAuthorized');
-            const companyField = document.getElementById('companyNumberField');
-            const authorizedField = document.getElementById('authorizedNumberField');
-
-            typeCompany.addEventListener('change', function() {
-                if (this.checked) {
-                    companyField.classList.add('show');
-                    authorizedField.classList.remove('show');
-                    document.getElementById('companyNumber').required = true;
-                    document.getElementById('authorizedNumber').required = false;
-                }
+        function toggleAccordion(header) {
+            const section = header.closest('.accordion-section');
+            document.querySelectorAll('.accordion-section').forEach(s => {
+                if (s !== section) s.classList.remove('active');
             });
-
-            typeAuthorized.addEventListener('change', function() {
-                if (this.checked) {
-                    authorizedField.classList.add('show');
-                    companyField.classList.remove('show');
-                    document.getElementById('authorizedNumber').required = true;
-                    document.getElementById('companyNumber').required = false;
-                }
-            });
+            section.classList.toggle('active');
         }
 
-        // Working Hours
-        function initWorkingHours() {
-            const days = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
-            const container = document.getElementById('workingHoursContainer');
+        function initAccordions() {
+            document.querySelector('.accordion-section').classList.add('active');
+        }
 
-            days.forEach((day, index) => {
-                const dayRow = document.createElement('div');
-                dayRow.className = 'day-row';
-                dayRow.innerHTML = `
-                    <div class="day-checkbox">
-                        <input type="checkbox" id="closedWork${index}">
-                        <label for="closedWork${index}">סגור</label>
-                    </div>
-                    <span class="day-name">${day}</span>
-                    <input type="text" class="time-input" id="workOpen${index}" placeholder="09:00">
-                    <input type="text" class="time-input" id="workClose${index}" placeholder="21:00">
-                    <span class="closed-text" id="closedTextWork${index}">סגור</span>
-                `;
-                container.appendChild(dayRow);
+        function initFileUploads() {
+            ['logo', 'terms', 'accessibility'].forEach(type => {
+                const input = document.getElementById(`${type}File`);
+                const upload = document.getElementById(`${type}Upload`);
+                const fileName = document.getElementById(`${type}FileName`);
 
-                const checkbox = document.getElementById(`closedWork${index}`);
-                const openInput = document.getElementById(`workOpen${index}`);
-                const closeInput = document.getElementById(`workClose${index}`);
-                const closedText = document.getElementById(`closedTextWork${index}`);
-
-                checkbox.addEventListener('change', function() {
-                    if (this.checked) {
-                        openInput.style.display = 'none';
-                        closeInput.style.display = 'none';
-                        closedText.style.display = 'block';
-                        openInput.value = '';
-                        closeInput.value = '';
-                    } else {
-                        openInput.style.display = 'block';
-                        closeInput.style.display = 'block';
-                        closedText.style.display = 'none';
+                upload.addEventListener('click', () => input.click());
+                input.addEventListener('change', function() {
+                    if (this.files.length > 0) {
+                        fileName.textContent = this.files[0].name;
+                        upload.classList.add('has-file');
                     }
                 });
             });
         }
 
-        // Delivery Hours
-        function initDeliveryHours() {
-            const days = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
-            const container = document.getElementById('deliveryHoursContainer');
-
-            days.forEach((day, index) => {
-                const dayRow = document.createElement('div');
-                dayRow.className = 'day-row';
-                dayRow.innerHTML = `
-                    <div class="day-checkbox">
-                        <input type="checkbox" id="closedDelivery${index}">
-                        <label for="closedDelivery${index}">סגור</label>
-                    </div>
-                    <span class="day-name">${day}</span>
-                    <input type="text" class="time-input" id="deliveryOpen${index}" placeholder="10:00">
-                    <input type="text" class="time-input" id="deliveryClose${index}" placeholder="20:00">
-                    <span class="closed-text" id="closedTextDelivery${index}">סגור</span>
-                `;
-                container.appendChild(dayRow);
-
-                const checkbox = document.getElementById(`closedDelivery${index}`);
-                const openInput = document.getElementById(`deliveryOpen${index}`);
-                const closeInput = document.getElementById(`deliveryClose${index}`);
-                const closedText = document.getElementById(`closedTextDelivery${index}`);
-
-                checkbox.addEventListener('change', function() {
-                    if (this.checked) {
-                        openInput.style.display = 'none';
-                        closeInput.style.display = 'none';
-                        closedText.style.display = 'block';
-                        openInput.value = '';
-                        closeInput.value = '';
-                    } else {
-                        openInput.style.display = 'block';
-                        closeInput.style.display = 'block';
-                        closedText.style.display = 'none';
+        function initOptions() {
+            document.querySelectorAll('.option-card input').forEach(input => {
+                input.addEventListener('change', function() {
+                    if (this.type === 'radio') {
+                        document.querySelectorAll(`input[name="${this.name}"]`).forEach(r => {
+                            r.closest('.option-card').classList.remove('selected');
+                        });
                     }
+                    this.closest('.option-card').classList.toggle('selected', this.checked);
                 });
             });
         }
 
-        // Delivery Zones
-        let zoneCount = 0;
-
-        function initDeliveryZones() {
-            document.getElementById('addZoneBtn').addEventListener('click', addZone);
+        function initBranches() {
+            document.getElementById('yesBranches').addEventListener('change', function() {
+                if (this.checked) {
+                    document.getElementById('branchesModal').classList.add('show');
+                    if (branchCount === 0) addBranch();
+                }
+            });
         }
 
-        function addZone() {
-            zoneCount++;
-            const container = document.getElementById('zonesContainer');
-            const zoneItem = document.createElement('div');
-            zoneItem.className = 'zone-item';
-            zoneItem.dataset.zoneId = zoneCount;
-            zoneItem.innerHTML = `
-                <div class="form-group" style="margin-bottom: 0;">
-                    <label class="form-label">שם אזור</label>
-                    <input type="text" class="form-input zone-name" placeholder="תל אביב">
+        function addBranch() {
+            branchCount++;
+            const div = document.createElement('div');
+            div.className = 'branch-item';
+            div.innerHTML = `
+                <span class="branch-number">סניף ${branchCount}</span>
+                <button type="button" class="btn-remove" onclick="this.closest('.branch-item').remove()">מחק</button>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">שם הסניף</label>
+                        <input type="text" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">כתובת</label>
+                        <input type="text" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">טלפון</label>
+                        <input type="tel" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">מייל</label>
+                        <input type="email" class="form-input">
+                    </div>
                 </div>
-                <div class="form-group" style="margin-bottom: 0;">
-                    <label class="form-label">עלות (₪)</label>
-                    <input type="number" class="form-input zone-cost" placeholder="25" min="0" step="0.01">
-                </div>
-                <button type="button" class="btn-remove" onclick="removeZone(${zoneCount})">מחק</button>
             `;
-            container.appendChild(zoneItem);
+            document.getElementById('branchesContainer').appendChild(div);
         }
 
-        function removeZone(id) {
-            const zone = document.querySelector(`[data-zone-id="${id}"]`);
-            zone.remove();
+        function closeBranchesModal() {
+            document.getElementById('branchesModal').classList.remove('show');
         }
 
-        // Cash Registers Validation
-        function initCashRegisters() {
-            const checkboxes = document.querySelectorAll('input[name="cashRegister"]');
-            checkboxes.forEach(cb => {
-                cb.addEventListener('change', function() {
-                    const checked = document.querySelectorAll('input[name="cashRegister"]:checked').length > 0;
-                    document.getElementById('cashRegisterError').style.display = checked ? 'none' : 'block';
-                });
-            });
-        }
-
-        // Radio Options Visual Feedback
-        function initRadioOptions() {
-            document.querySelectorAll('.radio-option input[type="radio"]').forEach(radio => {
-                radio.addEventListener('change', function() {
-                    const parent = this.closest('.radio-group');
-                    parent.querySelectorAll('.radio-option').forEach(opt => opt.classList.remove('selected'));
-                    this.closest('.radio-option').classList.add('selected');
-                });
-            });
-
-            document.querySelectorAll('.checkbox-option input[type="checkbox"]').forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
-                    if (this.checked) {
-                        this.closest('.checkbox-option').classList.add('selected');
-                    } else {
-                        this.closest('.checkbox-option').classList.remove('selected');
-                    }
-                });
-            });
-        }
-
-        // Form Validation
-        function initFormValidation() {
-            const form = document.getElementById('businessForm');
-
-            // Phone validation
-            const phoneInputs = ['businessPhone', 'contactPhone', 'roPhone'];
-            phoneInputs.forEach(id => {
-                const input = document.getElementById(id);
-                input.addEventListener('blur', function() {
-                    const value = this.value.replace(/\D/g, '');
-                    const isValid = /^0(5[0-9]|[2-4]|[8-9])[0-9]{7}$/.test(value);
-                    this.classList.toggle('error', !isValid && value.length > 0);
-                });
-            });
-
-            // Email validation
-            const emailInputs = ['businessEmail', 'roEmail'];
-            emailInputs.forEach(id => {
-                const input = document.getElementById(id);
-                input.addEventListener('blur', function() {
-                    const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value);
-                    this.classList.toggle('error', !isValid && this.value.length > 0);
-                });
-            });
-
-            // Form submit
-            form.addEventListener('submit', handleSubmit);
-        }
-
-        // Handle Submit
-        function handleSubmit(e) {
-            e.preventDefault();
-
-            // Validate required fields
-            const requiredFields = [
-                'businessName', 'businessAddress', 'businessPhone', 'businessEmail',
-                'contactName', 'contactPhone',
-                'roNumber', 'roName', 'roPhone', 'roEmail'
-            ];
-
-            let isValid = true;
-
-            requiredFields.forEach(id => {
-                const input = document.getElementById(id);
-                if (!input.value.trim()) {
-                    input.classList.add('error');
-                    isValid = false;
-                } else {
-                    input.classList.remove('error');
-                }
-            });
-
-            // Validate business type
-            const businessType = document.querySelector('input[name="businessType"]:checked');
-            if (!businessType) {
-                alert('נא לבחור סוג עסק');
-                isValid = false;
-            } else if (businessType.value === 'company' && !document.getElementById('companyNumber').value.trim()) {
-                document.getElementById('companyNumber').classList.add('error');
-                isValid = false;
-            } else if (businessType.value === 'authorized' && !document.getElementById('authorizedNumber').value.trim()) {
-                document.getElementById('authorizedNumber').classList.add('error');
-                isValid = false;
-            }
-
-            // Validate cash registers
-            const cashRegisters = document.querySelectorAll('input[name="cashRegister"]:checked');
-            if (cashRegisters.length === 0) {
-                document.getElementById('cashRegisterError').style.display = 'block';
-                isValid = false;
-            }
-
-            // Validate customer type
-            const customerType = document.querySelector('input[name="customerType"]:checked');
-            if (!customerType) {
-                alert('נא לבחור אפשרות תשלום');
-                isValid = false;
-            }
-
-            // Validate at least one working day
-            const workingDays = [];
-            for (let i = 0; i < 7; i++) {
-                const closed = document.getElementById(`closedWork${i}`).checked;
-                if (!closed) {
-                    workingDays.push(i);
-                }
-            }
-
-            if (workingDays.length === 0) {
-                alert('נא לבחור לפחות יום אחד פתוח');
-                isValid = false;
-            }
-
-            if (!isValid) {
-                return;
-            }
-
-            // Collect form data
-            const formData = collectFormData();
-
-            // Send data (placeholder - implement your actual sending logic)
-            sendFormData(formData);
-        }
-
-        // Collect Form Data
-        function collectFormData() {
-            const data = {
-                business: {
-                    name: document.getElementById('businessName').value,
-                    address: document.getElementById('businessAddress').value,
-                    phone: document.getElementById('businessPhone').value,
-                    email: document.getElementById('businessEmail').value,
-                    contactName: document.getElementById('contactName').value,
-                    contactPhone: document.getElementById('contactPhone').value
-                },
-                social: {
-                    website: document.getElementById('website').value,
-                    facebook: document.getElementById('facebook').value,
-                    instagram: document.getElementById('instagram').value,
-                    tiktok: document.getElementById('tiktok').value
-                },
-                businessType: {
-                    type: document.querySelector('input[name="businessType"]:checked').value,
-                    number: document.querySelector('input[name="businessType"]:checked').value === 'company' 
-                        ? document.getElementById('companyNumber').value 
-                        : document.getElementById('authorizedNumber').value
-                },
-                ro: {
-                    number: document.getElementById('roNumber').value,
-                    name: document.getElementById('roName').value,
-                    phone: document.getElementById('roPhone').value,
-                    email: document.getElementById('roEmail').value
-                },
-                cashRegisters: Array.from(document.querySelectorAll('input[name="cashRegister"]:checked')).map(cb => cb.value),
-                customerType: document.querySelector('input[name="customerType"]:checked').value,
-                workingHours: getHours('work'),
-                deliveryHours: getHours('delivery'),
-                deliveryZones: getZones(),
-                additional: {
-                    defaultDelivery: document.getElementById('defaultDelivery').value,
-                    minOrder: document.getElementById('minOrder').value,
-                    freeDelivery: document.getElementById('freeDelivery').value,
-                    notes: document.getElementById('notes').value
-                }
-            };
-
-            return data;
-        }
-
-        function getHours(type) {
+        function initHours() {
             const days = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
-            const hours = [];
+            const container = document.getElementById('hoursContainer');
 
             days.forEach((day, i) => {
-                const prefix = type === 'work' ? 'work' : 'delivery';
-                const closed = document.getElementById(`closed${type.charAt(0).toUpperCase() + type.slice(1)}${i}`).checked;
-                
-                if (!closed) {
-                    const open = document.getElementById(`${prefix}Open${i}`).value;
-                    const close = document.getElementById(`${prefix}Close${i}`).value;
-                    if (open && close) {
-                        hours.push({ day, open, close });
-                    }
-                }
-            });
+                const slot = document.createElement('div');
+                slot.className = 'time-slot';
+                slot.innerHTML = `
+                    <input type="checkbox" id="day${i}" style="width: 20px; height: 20px;">
+                    <span style="font-weight: 600;">${day}</span>
+                    <input type="time" id="open${i}" disabled>
+                    <input type="time" id="close${i}" disabled>
+                `;
+                container.appendChild(slot);
 
-            return hours;
+                const cb = document.getElementById(`day${i}`);
+                const open = document.getElementById(`open${i}`);
+                const close = document.getElementById(`close${i}`);
+
+                cb.addEventListener('change', function() {
+                    open.disabled = !this.checked;
+                    close.disabled = !this.checked;
+                    slot.classList.toggle('active', this.checked);
+                });
+            });
         }
 
-        function getZones() {
-            const zones = [];
-            document.querySelectorAll('.zone-item').forEach(item => {
-                const name = item.querySelector('.zone-name').value;
-                const cost = item.querySelector('.zone-cost').value;
-                if (name && cost) {
-                    zones.push({ name, cost: parseFloat(cost) });
-                }
+        function initFillingIndicators() {
+            document.querySelectorAll('.form-input').forEach(input => {
+                input.addEventListener('input', function() {
+                    this.classList.toggle('filling', this.value.trim() !== '');
+                    const section = this.closest('.accordion-section');
+                    if (section) section.classList.add('filling');
+                });
             });
-            return zones;
         }
 
-        // Send Form Data
-        function sendFormData(data) {
-            console.log('Form Data:', data);
-
-            // Show success message
-            document.getElementById('successOverlay').classList.add('show');
-
-            // Hide after 3 seconds
-            setTimeout(() => {
-                document.getElementById('successOverlay').classList.remove('show');
-                // Optional: Reset form or redirect
-                // document.getElementById('businessForm').reset();
-            }, 3000);
-
-            // TODO: Implement actual sending logic
-            // - Google Sheets API
-            // - WordPress REST API
-            // - Email service (Formspree, etc.)
-        }
-
-        // Progress Bar
-        function initProgressBar() {
-            const form = document.getElementById('businessForm');
-            const inputs = form.querySelectorAll('input, select, textarea');
-
-            inputs.forEach(input => {
-                input.addEventListener('input', updateProgress);
-                input.addEventListener('change', updateProgress);
+        function initForm() {
+            document.getElementById('businessForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                console.log('Form submitted!');
+                document.getElementById('successOverlay').classList.add('show');
+                setTimeout(() => {
+                    document.getElementById('successOverlay').classList.remove('show');
+                }, 3000);
             });
-
-            updateProgress();
-        }
-
-        function updateProgress() {
-            const requiredFields = [
-                'businessName', 'businessAddress', 'businessPhone', 'businessEmail',
-                'contactName', 'contactPhone',
-                'roNumber', 'roName', 'roPhone', 'roEmail'
-            ];
-
-            let filled = 0;
-            requiredFields.forEach(id => {
-                if (document.getElementById(id).value.trim()) filled++;
-            });
-
-            // Business type
-            if (document.querySelector('input[name="businessType"]:checked')) filled++;
-
-            // Cash registers
-            if (document.querySelectorAll('input[name="cashRegister"]:checked').length > 0) filled++;
-
-            // Customer type
-            if (document.querySelector('input[name="customerType"]:checked')) filled++;
-
-            // Working hours
-            let hasWorkingDay = false;
-            for (let i = 0; i < 7; i++) {
-                if (!document.getElementById(`closedWork${i}`).checked) {
-                    hasWorkingDay = true;
-                    break;
-                }
-            }
-            if (hasWorkingDay) filled++;
-
-            const total = requiredFields.length + 4; // 10 + 4 = 14
-            const progress = (filled / total) * 100;
-            document.getElementById('progressBar').style.width = `${progress}%`;
         }
     </script>
 </body>
