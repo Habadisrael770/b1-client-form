@@ -1,0 +1,12 @@
+{
+  "name": "client-form",
+  "version": "1.0.0",
+  "description": "Client registration form",
+  "main": "index.html",
+  "scripts": {
+    "start": "http-server"
+  },
+  "keywords": ["form", "client"],
+  "author": "Hanan B1",
+  "license": "MIT"
+}
