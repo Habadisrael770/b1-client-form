@@ -86,7 +86,31 @@
 
         .accordion-section.filling {
             border-color: var(--green-primary);
-            background: rgba(32, 216, 91, 0.02);
+            border-width: 3px;
+            background: rgba(32, 216, 91, 0.05);
+        }
+
+        .accordion-section[data-section="files"] {
+            background: var(--yellow);
+            border: 3px solid #000;
+        }
+
+        .accordion-section[data-section="files"] .accordion-header {
+            background: var(--yellow);
+            color: #000;
+        }
+
+        .accordion-section[data-section="files"] .accordion-content {
+            background: #FFDF00;
+        }
+
+        .accordion-section[data-section="files"] .accordion-body {
+            background: #FFDF00;
+        }
+
+        .accordion-section[data-section="files"].filling {
+            background: rgba(32, 216, 91, 0.05);
+            border-color: var(--green-primary);
         }
 
         .accordion-header {
@@ -116,10 +140,22 @@
         .accordion-icon {
             font-size: 1.5rem;
             transition: transform 0.3s;
+            display: inline-block;
         }
 
         .accordion-section.active .accordion-icon {
             transform: rotate(45deg);
+        }
+
+        .accordion-section.filling .accordion-icon {
+            font-size: 0;
+        }
+
+        .accordion-section.filling .accordion-icon::after {
+            content: '✓';
+            font-size: 1.5rem;
+            color: var(--green-primary);
+            font-weight: bold;
         }
 
         .requirement-badge {
@@ -533,7 +569,7 @@
                 <div class="accordion-header" onclick="toggleAccordion(this)">
                     <div class="accordion-title">
                         <span class="accordion-icon">+</span>
-                        <span>פרטי בית העסק</span>
+                        <span>🏢 פרטי בית העסק</span>
                     </div>
                     <span class="requirement-badge required">חובה</span>
                 </div>
@@ -605,41 +641,14 @@
                 <div class="accordion-header" onclick="toggleAccordion(this)">
                     <div class="accordion-title">
                         <span class="accordion-icon">+</span>
-                        <span>צרף קבצים</span>
+                        <span>📎 צרף קבצים</span>
                     </div>
                     <span class="requirement-badge optional">אופציונלי</span>
                 </div>
                 <div class="accordion-content">
                     <div class="accordion-body">
-                        <div class="form-grid" style="grid-template-columns: 1fr;">
-                            <div class="form-group">
-                                <label class="form-label">לוגו העסק</label>
-                                <label class="file-upload" id="logoUpload">
-                                    <input type="file" id="logoFile" accept="image/*">
-                                    <span style="font-size: 3rem;">📁</span>
-                                    <p>לחץ לבחירת קובץ</p>
-                                    <div id="logoFileName"></div>
-                                </label>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">תקנון האתר</label>
-                                <label class="file-upload" id="termsUpload">
-                                    <input type="file" id="termsFile" accept=".pdf,.doc,.docx">
-                                    <span style="font-size: 3rem;">📄</span>
-                                    <p>לחץ לבחירת קובץ</p>
-                                    <div id="termsFileName"></div>
-                                </label>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">הצהרת נגישות</label>
-                                <label class="file-upload" id="accessibilityUpload">
-                                    <input type="file" id="accessibilityFile" accept=".pdf,.doc,.docx">
-                                    <span style="font-size: 3rem;">♿</span>
-                                    <p>לחץ לבחירת קובץ</p>
-                                    <div id="accessibilityFileName"></div>
-                                </label>
-                            </div>
-                        </div>
+                        <div id="filesContainer"></div>
+                        <button type="button" class="btn-add" onclick="addFileUpload()">+ הוסף קובץ</button>
                     </div>
                 </div>
             </div>
@@ -649,7 +658,7 @@
                 <div class="accordion-header" onclick="toggleAccordion(this)">
                     <div class="accordion-title">
                         <span class="accordion-icon">+</span>
-                        <span>סוג עסק</span>
+                        <span>🏪 סוג עסק</span>
                     </div>
                     <span class="requirement-badge required">חובה</span>
                 </div>
@@ -665,6 +674,12 @@
                                 <span>עוסק מורשה</span>
                             </label>
                         </div>
+                        <div class="form-group">
+                            <label class="form-label">
+                                <span class="required-star">*</span> מס עוסק / מס חברה
+                            </label>
+                            <input type="text" class="form-input" id="businessNumber" placeholder="לדוגמה: 123456789" required>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -674,7 +689,7 @@
                 <div class="accordion-header" onclick="toggleAccordion(this)">
                     <div class="accordion-title">
                         <span class="accordion-icon">+</span>
-                        <span>קופות קיימות</span>
+                        <span>💳 קופות קיימות</span>
                     </div>
                     <span class="requirement-badge required">חובה</span>
                 </div>
@@ -682,36 +697,44 @@
                     <div class="accordion-body">
                         <div class="form-grid three">
                             <label class="option-card">
+                                <input type="checkbox" name="cashRegister" value="comcash">
+                                <span>קומקס</span>
+                            </label>
+                            <label class="option-card">
+                                <input type="checkbox" name="cashRegister" value="all4shop">
+                                <span>אול4שופ</span>
+                            </label>
+                            <label class="option-card">
+                                <input type="checkbox" name="cashRegister" value="barak">
+                                <span>ברק קופות</span>
+                            </label>
+                            <label class="option-card">
+                                <input type="checkbox" name="cashRegister" value="yogev">
+                                <span>יוגב קופות</span>
+                            </label>
+                            <label class="option-card">
                                 <input type="checkbox" name="cashRegister" value="caspit">
                                 <span>כספית</span>
                             </label>
                             <label class="option-card">
-                                <input type="checkbox" name="cashRegister" value="aviiv">
-                                <span>אביב POS</span>
-                            </label>
-                            <label class="option-card">
-                                <input type="checkbox" name="cashRegister" value="comcash">
-                                <span>קומקס</span>
+                                <input type="checkbox" name="cashRegister" value="hashbashevet">
+                                <span>חשבשבת</span>
                             </label>
                             <label class="option-card">
                                 <input type="checkbox" name="cashRegister" value="presto">
                                 <span>פרסטו</span>
                             </label>
                             <label class="option-card">
-                                <input type="checkbox" name="cashRegister" value="gitam">
-                                <span>גיתם</span>
+                                <input type="checkbox" name="cashRegister" value="veriphone">
+                                <span>וריפון</span>
                             </label>
                             <label class="option-card">
-                                <input type="checkbox" name="cashRegister" value="michlol">
-                                <span>מכלול</span>
+                                <input type="checkbox" name="cashRegister" value="aviiv">
+                                <span>אביב קופות</span>
                             </label>
                             <label class="option-card">
-                                <input type="checkbox" name="cashRegister" value="matrix">
-                                <span>מטריקס</span>
-                            </label>
-                            <label class="option-card">
-                                <input type="checkbox" name="cashRegister" value="next">
-                                <span>נקסט</span>
+                                <input type="checkbox" name="cashRegister" value="ratelix">
+                                <span>רטליקס</span>
                             </label>
                             <label class="option-card">
                                 <input type="checkbox" name="cashRegister" value="other">
@@ -727,24 +750,24 @@
                 <div class="accordion-header" onclick="toggleAccordion(this)">
                     <div class="accordion-title">
                         <span class="accordion-icon">+</span>
-                        <span>אפשרויות תשלום</span>
+                        <span>💰 אפשרויות תשלום</span>
                     </div>
                     <span class="requirement-badge required">חובה</span>
                 </div>
                 <div class="accordion-content">
                     <div class="accordion-body">
-                        <div class="form-grid three">
+                        <div class="form-grid">
                             <label class="option-card">
                                 <input type="checkbox" name="payment" value="credit">
                                 <span>אשראי</span>
                             </label>
                             <label class="option-card">
-                                <input type="checkbox" name="payment" value="check">
-                                <span>צ'ק</span>
-                            </label>
-                            <label class="option-card">
                                 <input type="checkbox" name="payment" value="cash">
                                 <span>מזומן</span>
+                            </label>
+                            <label class="option-card">
+                                <input type="checkbox" name="payment" value="both">
+                                <span>שניהם</span>
                             </label>
                         </div>
                     </div>
@@ -756,7 +779,7 @@
                 <div class="accordion-header" onclick="toggleAccordion(this)">
                     <div class="accordion-title">
                         <span class="accordion-icon">+</span>
-                        <span>סוג לקוח</span>
+                        <span>👥 סוג לקוח</span>
                     </div>
                     <span class="requirement-badge required">חובה</span>
                 </div>
@@ -785,7 +808,7 @@
                 <div class="accordion-header" onclick="toggleAccordion(this)">
                     <div class="accordion-title">
                         <span class="accordion-icon">+</span>
-                        <span>שעות פעילות</span>
+                        <span>🕐 שעות פעילות</span>
                     </div>
                     <span class="requirement-badge required">חובה</span>
                 </div>
@@ -796,12 +819,47 @@
                 </div>
             </div>
 
-            <!-- 8. ליקוט הזמנות -->
+            <!-- 8. שעות חלוקה לפי סלוטים -->
+            <div class="accordion-section" data-section="deliverySlots" data-required="true">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">
+                        <span class="accordion-icon">+</span>
+                        <span>📅 שעות חלוקה לפי סלוטים</span>
+                    </div>
+                    <span class="requirement-badge required">חובה</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">שעת התחלה</label>
+                                <input type="time" class="form-input" id="slotStartTime" value="09:00">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">שעת סיום</label>
+                                <input type="time" class="form-input" id="slotEndTime" value="18:00">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">אורך סלוט (בשעות)</label>
+                                <select class="form-input" id="slotDuration">
+                                    <option value="2" selected>2 שעות</option>
+                                    <option value="2.5">2.5 שעות</option>
+                                    <option value="3">3 שעות</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="deliverySlotsContainer"></div>
+                        <button type="button" class="btn-add" onclick="generateDeliverySlots()">+ צור סלוטים</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 9. ליקוט הזמנות -->
             <div class="accordion-section" data-section="picking" data-required="true">
                 <div class="accordion-header" onclick="toggleAccordion(this)">
                     <div class="accordion-title">
                         <span class="accordion-icon">+</span>
-                        <span>ליקוט הזמנות</span>
+                        <span>📦 ליקוט הזמנות</span>
                     </div>
                     <span class="requirement-badge required">חובה</span>
                 </div>
@@ -821,12 +879,118 @@
                 </div>
             </div>
 
-            <!-- 9. פיקסלים - רשתות חברתיות -->
+            <!-- 10. איזורי משלוח -->
+            <div class="accordion-section" data-section="deliveryZones" data-required="true">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">
+                        <span class="accordion-icon">+</span>
+                        <span>🚚 איזורי משלוח</span>
+                    </div>
+                    <span class="requirement-badge required">חובה</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <div class="form-group">
+                            <label class="form-label">
+                                <span class="required-star">*</span> עיר/אזור משלוח (ברירה מחדל)
+                            </label>
+                            <input type="text" class="form-input" id="defaultDeliveryZone" placeholder="לדוגמה: עכו" required>
+                        </div>
+                        <div id="deliveryZonesContainer"></div>
+                        <button type="button" class="btn-add" onclick="addDeliveryZone()">+ הוסף שינוי אזור</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 11. מינימום הזמנה -->
+            <div class="accordion-section" data-section="minOrder" data-required="true">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">
+                        <span class="accordion-icon">+</span>
+                        <span>📊 מינימום הזמנה</span>
+                    </div>
+                    <span class="requirement-badge required">חובה</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <div class="form-group">
+                            <label class="form-label">
+                                <span class="required-star">*</span> סכום מינימום הזמנה (₪)
+                            </label>
+                            <input type="number" class="form-input" id="minOrderAmount" placeholder="לדוגמה: 50" min="0" step="0.01" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 12. הזמנה ללא עלות משלוח -->
+            <div class="accordion-section" data-section="freeDelivery" data-required="true">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">
+                        <span class="accordion-icon">+</span>
+                        <span>🎁 הזמנה ללא עלות משלוח</span>
+                    </div>
+                    <span class="requirement-badge required">חובה</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <div class="form-group">
+                            <label class="form-label">
+                                <span class="required-star">*</span> סכום הזמנה ללא עלות משלוח (₪)
+                            </label>
+                            <input type="number" class="form-input" id="freeDeliveryAmount" placeholder="לדוגמה: 100" min="0" step="0.01" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 13. 📱 רשתות חברתיות -->
+            <div class="accordion-section" data-section="socialNetworks">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">
+                        <span class="accordion-icon">+</span>
+                        <span>📱 רשתות חברתיות</span>
+                    </div>
+                    <span class="requirement-badge optional">אופציונלי</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Facebook</label>
+                                <input type="url" class="form-input" id="facebookUrl" placeholder="https://facebook.com/...">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Instagram</label>
+                                <input type="url" class="form-input" id="instagramUrl" placeholder="https://instagram.com/...">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">TikTok</label>
+                                <input type="url" class="form-input" id="tiktokUrl" placeholder="https://tiktok.com/...">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">LinkedIn</label>
+                                <input type="url" class="form-input" id="linkedinUrl" placeholder="https://linkedin.com/...">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">WhatsApp</label>
+                                <input type="url" class="form-input" id="whatsappUrl" placeholder="https://wa.me/...">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Telegram</label>
+                                <input type="url" class="form-input" id="telegramUrl" placeholder="https://t.me/...">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 14. פיקסלים -->
             <div class="accordion-section" data-section="pixels">
                 <div class="accordion-header" onclick="toggleAccordion(this)">
                     <div class="accordion-title">
                         <span class="accordion-icon">+</span>
-                        <span>פיקסלים - רשתות חברתיות</span>
+                        <span>🔍 פיקסלים - רשתות חברתיות</span>
                     </div>
                     <span class="requirement-badge optional">אופציונלי</span>
                 </div>
@@ -956,18 +1120,73 @@
             document.getElementById('branchesModal').classList.remove('show');
         }
 
-        function initHours() {
+        let deliveryZoneCount = 0;
+        let fileUploadCount = 0;
+
+        function addFileUpload() {
+            fileUploadCount++;
+            const div = document.createElement('div');
+            div.className = 'branch-item';
+            div.innerHTML = `
+                <span class="branch-number">קובץ ${fileUploadCount}</span>
+                <button type="button" class="btn-remove" onclick="this.closest('.branch-item').remove()">מחק</button>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">שם הקובץ</label>
+                        <input type="text" class="form-input" placeholder="לדוגמה: לוגו">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">בחר קובץ</label>
+                        <input type="file" class="form-input" style="padding: 0.5rem;">
+                    </div>
+                </div>
+            `;
+            document.getElementById('filesContainer').appendChild(div);
+        }
+
+        function addDeliveryZone() {
+            deliveryZoneCount++;
             const days = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
+            const div = document.createElement('div');
+            div.className = 'branch-item';
+            let daysHtml = '';
+            days.forEach((day, idx) => {
+                daysHtml += `<label style="display: inline-block; margin-right: 15px;"><input type="checkbox" name="zone_day_${deliveryZoneCount}_${idx}"> ${day}</label>`;
+            });
+            div.innerHTML = `
+                <span class="branch-number">שינוי אזור ${deliveryZoneCount}</span>
+                <button type="button" class="btn-remove" onclick="this.closest('.branch-item').remove()">מחק</button>
+                <div class="form-group">
+                    <label class="form-label">בחר ימים:</label>
+                    <div>${daysHtml}</div>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">עיר/אזור</label>
+                        <input type="text" class="form-input" placeholder="לדוגמה: נהריה">
+                    </div>
+                </div>
+            `;
+            document.getElementById('deliveryZonesContainer').appendChild(div);
+        }
+
+        function initHours() {
+            const days = ['u05e8u05d0u05e9u05d5u05df', 'u05e9u05e0u05d9', 'u05e9u05dcu05d9u05e9u05d9', 'u05e8u05d1u05d9u05e2u05d9', 'u05d7u05deu05d9u05e9u05d9', 'u05e9u05d9u05e9u05d9', 'u05e9u05d1u05ea'];
+            const defaultOpen = '09:00';
+            const defaultClose = '18:00';
             const container = document.getElementById('hoursContainer');
 
             days.forEach((day, i) => {
                 const slot = document.createElement('div');
-                slot.className = 'time-slot';
+                // u05e9u05d1u05ea (u05d9u05d5u05dd 6) u05d1u05e8u05d9u05e8u05d4 u05deחדל סגור
+                const isSaturday = (i === 6);
+                const isChecked = !isSaturday;
+                slot.className = isChecked ? 'time-slot active' : 'time-slot';
                 slot.innerHTML = `
-                    <input type="checkbox" id="day${i}" style="width: 20px; height: 20px;">
-                    <span style="font-weight: 600;">${day}</span>
-                    <input type="time" id="open${i}" disabled>
-                    <input type="time" id="close${i}" disabled>
+                    <input type="checkbox" id="day${i}" style="width: 20px; height: 20px;" ${isChecked ? 'checked' : ''}>
+                    <label style="font-weight: 600; cursor: pointer;">${day}</label>
+                    <input type="time" id="open${i}" value="${defaultOpen}" ${!isChecked ? 'disabled' : ''}>
+                    <input type="time" id="close${i}" value="${defaultClose}" ${!isChecked ? 'disabled' : ''}>
                 `;
                 container.appendChild(slot);
 
@@ -990,6 +1209,55 @@
                     const section = this.closest('.accordion-section');
                     if (section) section.classList.add('filling');
                 });
+            });
+        }
+
+        function generateDeliverySlots() {
+            const startTime = document.getElementById('slotStartTime').value;
+            const endTime = document.getElementById('slotEndTime').value;
+            const duration = parseFloat(document.getElementById('slotDuration').value);
+            const container = document.getElementById('deliverySlotsContainer');
+            
+            if (!startTime || !endTime) {
+                alert('נא להצביע שעות התחלה וסיום');
+                return;
+            }
+            
+            const [startHour, startMin] = startTime.split(':').map(Number);
+            const [endHour, endMin] = endTime.split(':').map(Number);
+            const startTotalMin = startHour * 60 + startMin;
+            const endTotalMin = endHour * 60 + endMin;
+            const durationMin = duration * 60;
+            
+            container.innerHTML = '';
+            const days = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
+            
+            days.forEach((day, dayIndex) => {
+                const dayDiv = document.createElement('div');
+                dayDiv.className = 'form-group';
+                dayDiv.innerHTML = `<label class="form-label"><strong>${day}</strong></label>`;
+                
+                const slotsDiv = document.createElement('div');
+                slotsDiv.className = 'form-grid';
+                
+                for (let time = startTotalMin; time < endTotalMin; time += durationMin) {
+                    const hour = Math.floor(time / 60);
+                    const min = time % 60;
+                    const nextHour = Math.floor((time + durationMin) / 60);
+                    const nextMin = (time + durationMin) % 60;
+                    const timeStr = `${String(hour).padStart(2, '0')}:${String(min).padStart(2, '0')}-${String(nextHour).padStart(2, '0')}:${String(nextMin).padStart(2, '0')}`;
+                    
+                    const label = document.createElement('label');
+                    label.className = 'option-card';
+                    label.innerHTML = `
+                        <input type="checkbox" name="deliverySlot_${dayIndex}" value="${timeStr}">
+                        <span>${timeStr}</span>
+                    `;
+                    slotsDiv.appendChild(label);
+                }
+                
+                dayDiv.appendChild(slotsDiv);
+                container.appendChild(dayDiv);
             });
         }
 
