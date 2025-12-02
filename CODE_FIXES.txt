@@ -1,0 +1,137 @@
+================================================================================
+קוד להעתקה והדבקה - תיקונים לטופס הקמת לקוח
+================================================================================
+
+תיקון #1: שנה את סדר הימים (החלף את השורה הזו בקוד):
+
+מ:
+const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+const dayNames = ['יום שני', 'יום שלישי', 'יום רביעי', 'יום חמישי', 'יום שישי', 'שבת', 'יום ראשון'];
+
+ל:
+const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+const dayNames = ['יום ראשון', 'יום שני', 'יום שלישי', 'יום רביעי', 'יום חמישי', 'יום שישי', 'שבת'];
+
+================================================================================
+
+תיקון #2: הוסף את הקוד הזה בתוך .day-body-integrated (בכל יום):
+
+<div class="form-group">
+  <label>
+    <input type="checkbox" name="closed_${day}" class="closed-checkbox" data-day="${day}">
+    העסק סגור ביום זה
+  </label>
+</div>
+
+================================================================================
+
+תיקון #3: הוסף את הקוד הזה בקטע JavaScript (בסוף הקובץ):
+
+// הסתרת שעות כשהעסק סגור
+document.querySelectorAll('.closed-checkbox').forEach(checkbox => {
+  checkbox.addEventListener('change', function() {
+    const day = this.dataset.day;
+    const hoursSection = document.querySelector(`[data-hours-day="${day}"]`);
+    if (this.checked) {
+      hoursSection.style.display = 'none';
+    } else {
+      hoursSection.style.display = 'block';
+    }
+  });
+});
+
+================================================================================
+
+תיקון #4: תקן את שליחת הטופס (החלף את ה-fetch הישן):
+
+מ:
+fetch("https://docs.google.com/forms/d/e/1xZPYqsqnl6cZeCucfkzDTYlRBBC-rbipHLCAlHmvVnk/formResponse",{
+  method:"POST",
+  body:formData,
+  headers:{"Accept":"application/json"}
+})
+
+ל:
+fetch("https://docs.google.com/forms/d/e/1xZPYqsqnl6cZeCucfkzDTYlRBBC-rbipHLCAlHmvVnk/formResponse", {
+  method: "POST",
+  body: new URLSearchParams({
+    "entry.1234567890": document.getElementById('store_name').value,
+    "entry.1234567891": document.getElementById('store_address').value,
+    "entry.1234567892": document.getElementById('store_phone').value,
+    "entry.1234567893": document.getElementById('store_email').value,
+    "entry.1234567894": document.getElementById('contact_name').value,
+    "entry.1234567895": document.getElementById('contact_phone').value,
+    "entry.1234567896": document.getElementById('business_type').value,
+    "entry.1234567897": document.getElementById('company_number').value || '',
+    "entry.1234567898": document.getElementById('authorized_number').value || '',
+    "entry.1234567899": document.getElementById('delivery_days').value,
+    "entry.1234567900": document.getElementById('delivery_zones').value,
+    "entry.1234567901": document.getElementById('business_hours').value,
+    "entry.1234567902": document.getElementById('delivery_schedule').value,
+    "entry.1234567903": document.getElementById('notes').value || ''
+  }),
+  mode: 'no-cors'
+})
+
+הערה: צריך להחליף את המספרים (1234567890, 1234567891, וכו') עם ה-entry IDs הנכונים מה-Google Form
+
+================================================================================
+
+תיקון #5: תקן את validation (החלף את validateForm):
+
+function validateForm(){
+  let isValid = true;
+  
+  // שדות חובה בסיסיים
+  const requiredFields = [
+    'store_name', 'store_address', 'store_phone', 'store_email',
+    'contact_name', 'contact_phone', 'business_type'
+  ];
+  
+  requiredFields.forEach(field => {
+    const value = document.getElementById(field).value.trim();
+    if (!value) {
+      showError(field);
+      isValid = false;
+    } else {
+      showError(field, false);
+    }
+  });
+  
+  // וודא שלפחות יום אחד נבחר (לא סגור)
+  const anyDayOpen = Array.from(document.querySelectorAll('.closed-checkbox'))
+    .some(cb => !cb.checked);
+  if (!anyDayOpen) {
+    alert("צריך לבחור לפחות יום אחד שהעסק פתוח");
+    isValid = false;
+  }
+  
+  // וודא שלפחות אזור אחד נבחר
+  const anyZoneSelected = document.querySelectorAll('.zone-item').length > 0;
+  if (!anyZoneSelected) {
+    alert("צריך להוסיף לפחות אזור משלוח אחד");
+    isValid = false;
+  }
+  
+  return isValid;
+}
+
+================================================================================
+
+צעדים להחלת התיקונים:
+
+1. פתח את הקובץ index.html בעורך
+2. חפש את כל השורות שצריך להחליף (לפי התיקונים למעלה)
+3. החלף אותן בקוד החדש
+4. שמור את הקובץ
+5. בדוק שהטופס עובד
+
+================================================================================
+
+הערות חשובות:
+
+- ה-entry IDs (1234567890, וכו') צריכים להיות ה-IDs הנכונים מה-Google Form שלך
+- כדי למצוא את ה-IDs, פתח את ה-Google Form, לחץ F12, וחפש "entry."
+- אם לא מצאת את ה-IDs, תן לי להוסיף אותם בעצמי
+
+================================================================================

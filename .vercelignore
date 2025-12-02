@@ -1,0 +1,7 @@
+.git
+.gitignore
+node_modules
+*.md
+VERCEL_TOKEN.txt
+pasted_content_2.txt
+apps_script.gs

@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>טופס הקמת לקוח</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    body{margin:0;font-family:'Rubik',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:linear-gradient(135deg,#20d85b 0%,#1aaf4f 100%);color:#000;min-height:100vh;padding:10px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+    .form-container{max-width:100%;margin:0 auto;background:#fff;padding:20px 15px;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.1);overflow-x:hidden}
+    h1{color:#20d85b;font-weight:700;font-size:24px;margin:0 0 20px;text-align:center}
+    h2{color:#20d85b;font-weight:500;font-size:20px;margin:25px 0 15px;padding-bottom:8px;border-bottom:2px solid #f0f0f0}
+    .form-group{margin-bottom:15px}
+    label{display:block;font-weight:500;color:#333;margin-bottom:6px;font-size:14px}
+    input[type=text],input[type=tel],input[type=email],input[type=file],input[type=number],input[type=time],textarea,select{width:100%;padding:12px;border:2px solid #e0e0e0;border-radius:8px;font-size:16px;background:#fff;transition:all .3s ease;-webkit-appearance:none;-moz-appearance:none;appearance:none}
+    input:focus,select:focus,textarea:focus{outline:none;border-color:#20d85b;box-shadow:0 0 8px rgba(32,216,91,.3)}
+    input.valid,select.valid,textarea.valid{border-color:#90EE90;background-color:#f0fff0}
+    input.invalid,select.invalid,textarea.invalid{border-color:#FFB6C1;background-color:#fff0f0}
+    .file-upload-container{border:2px solid #e0e0e0;border-radius:8px;padding:12px;background:#fff;margin-top:5px;transition:all .3s ease}
+    .file-upload-container.valid{border-color:#90EE90;background-color:#f0fff0}
+    .file-upload-container.invalid{border-color:#FFB6C1;background-color:#fff0f0}
+    .file-upload-label{display:inline-flex;align-items:center;gap:8px;font-weight:500;color:#20d85b;cursor:pointer;padding:10px 16px;background:#f8fff9;border:1px solid #20d85b;border-radius:25px;transition:all .3s ease;font-size:14px}
+    .file-upload-label:active{transform:scale(.95)}
+    .file-upload-label::before{content:"+";font-size:20px;color:#20d85b}
+    input[type=file]{display:none}
+    .file-name{margin-top:8px;font-size:12px;color:#666;padding:6px;background:#f8f9fa;border-radius:4px;word-break:break-all}
+    .hidden-section{display:none;margin-top:15px;padding:15px;background:#f9f9f9;border-radius:8px;border:1px solid #ddd}
+    .submit-btn{background:linear-gradient(135deg,#fdf76e 0%,#f0e85e 100%);color:#000;font-weight:600;padding:16px;font-size:18px;border:none;border-radius:25px;cursor:pointer;margin-top:30px;display:block;width:100%;transition:all .3s ease;box-shadow:0 4px 15px rgba(253,247,110,.4)}
+    .submit-btn:active{transform:translateY(2px);box-shadow:0 2px 8px rgba(253,247,110,.3)}
+    #successMsg{display:none;color:#155724;font-weight:500;margin-top:20px;text-align:center;padding:16px;background:#d4edda;border-radius:8px;border:1px solid #c3e6cb;font-size:16px}
+    .error{color:#dc3545;font-size:12px;margin-top:4px;display:none}
+    .required::after{content:" *";color:#dc3545}
+
+    /* שעות חלוקה - עיצוב משולב */
+    .delivery-schedule-integrated{display:flex;flex-direction:column;gap:12px;margin-top:15px}
+    .day-slot-card-integrated{background:#fff;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.08);overflow:hidden;transition:box-shadow .3s ease;border:1px solid #e0e0e0}
+    .day-slot-card-integrated.active{box-shadow:0 6px 24px rgba(32,216,91,.15);border-color:#20d85b}
+    .day-header-integrated{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:linear-gradient(135deg,#f8fff9 0%,#f0f9ff 100%);cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;transition:all .3s ease}
+    .day-header-integrated:active{background:#e8f5e8;transform:scale(.98)}
+    .day-name-integrated{font-weight:600;color:#20d85b;font-size:16px}
+    .day-summary-integrated{font-size:13px;color:#555;margin-inline-start:auto;margin-inline-end:8px}
+    .chevron-integrated{font-size:12px;color:#20d85b;transition:transform .3s ease}
+    .day-slot-card-integrated.active .chevron-integrated{transform:rotate(180deg)}
+    .day-body-integrated{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.4,0,.2,1);background:#fff}
+    .day-slot-card-integrated.active .day-body-integrated{max-height:600px}
+    .range-row-integrated,.window-row-integrated{padding:12px 16px 0;display:flex;flex-direction:column;gap:6px}
+    .range-row-integrated label,.window-row-integrated label{font-size:14px;color:#333;font-weight:500}
+    .range-inputs-integrated{display:flex;align-items:center;gap:8px}
+    .range-inputs-integrated span{font-size:13px;color:#666}
+    .day-body-integrated input[type=time],.day-body-integrated select{flex:1;padding:10px 12px;border:1px solid #ddd;border-radius:8px;font-size:15px;background:#fff;transition:border-color .2s ease}
+    .day-body-integrated input[type=time]:focus,.day-body-integrated select:focus{outline:none;border-color:#20d85b;box-shadow:0 0 0 2px rgba(32,216,91,.2)}
+    .slots-list-integrated{padding:12px 16px 16px;display:flex;flex-direction:column;gap:10px}
+    .slot-item-integrated{background:#f8f9fa;border:1px solid #e0e0e0;border-radius:12px;padding:10px 12px;font-size:14px;color:#333;display:flex;align-items:center;justify-content:space-between}
+    .slot-item-integrated .slot-text-integrated{flex:1}
+    .slot-remove-integrated{background:#ff4757;color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:14px;cursor:pointer;transition:all .3s ease}
+    .slot-remove-integrated:hover{background:#ff3742;transform:scale(1.1)}
+    .slot-remove-integrated:active{transform:scale(.95)}
+    @media (max-width:480px){.day-header-integrated{padding:12px 14px}.day-name-integrated{font-size:15px}.day-summary-integrated{font-size:12px}.range-row-integrated,.window-row-integrated{padding:10px 14px 0}.slots-list-integrated{padding:10px 14px 14px}.day-body-integrated input[type=time],.day-body-integrated select{font-size:16px!important}}
+    @media (min-width:481px){.delivery-schedule-integrated{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}.day-body-integrated{max-height:none!important}.day-header-integrated{cursor:default}.chevron-integrated{display:none}}
+    @keyframes slideInIntegrated{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}.day-slot-card-integrated{animation:slideInIntegrated .4s ease-out}
+
+    /* ימי חלוקה */
+    .delivery-zones{margin-top:15px}.zone-item{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:12px;padding:12px;border:1px solid #e0e0e0;border-radius:8px;background:#f9f9f9}@media (min-width:481px){.zone-item{grid-template-columns:2fr 1fr 1fr}}
+    .branches-list{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:10px}
+    .checkbox-group{display:flex;align-items:center;gap:10px;margin-top:10px}.checkbox-group input[type=checkbox]{width:auto}
+    .min-order-group{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:10px}@media (max-width:480px){.min-order-group{grid-template-columns:1fr}}
+    button[onclick*="add"]{background:#20d85b;color:#fff;border:none;padding:10px 16px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;margin-top:8px;transition:all .3s ease}button[onclick*="add"]:active{transform:scale(.95)}
+    textarea{min-height:120px;resize:vertical;font-family:'Rubik',sans-serif}
+    @media (max-width:480px){body{padding:5px}.form-container{padding:15px;border-radius:12px}h1{font-size:20px}h2{font-size:18px}.business-hours{grid-template-columns:1fr}.day-hours{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;align-items:center}.day-hours h4{grid-column:1/-1;margin-bottom:4px}.zone-item{grid-template-columns:1fr}.min-order-group{grid-template-columns:1fr}input,select,textarea{font-size:16px!important}}
+    @media (min-width:481px) and (max-width:768px){.business-hours{grid-template-columns:repeat(2,1fr)}.zone-item{grid-template-columns:2fr 1fr 1fr}.branches-list{grid-template-columns:1fr 1fr}}
+    @media (min-width:769px){.form-container{max-width:800px;padding:30px}.business-hours{grid-template-columns:repeat(4,1fr)}.zone-item{grid-template-columns:2fr 1fr 1fr}.branches-list{grid-template-columns:1fr 1fr}.min-order-group{grid-template-columns:1fr 1fr}}
+    @supports (-webkit-touch-callout: none){input,select,textarea{font-size:16px!important}}
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <h1>טופס הקמת לקוח</h1>
+    <form id="clientForm" enctype="multipart/form-data">
+
+      <!-- פרטי בסיס -->
+      <div class="form-group">
+        <label class="required">שם החנות (כפי שתופיע באתר):</label>
+        <input type="text" name="store_name" id="store_name" required>
+        <div class="error" id="store_name_error">נא להזין שם חנות</div>
+      </div>
+
+      <div class="form-group">
+        <label class="required">כתובת החנות:</label>
+        <input type="text" name="store_address" id="store_address" required>
+        <div class="error" id="store_address_error">נא להזין כתובת</div>
+      </div>
+
+      <div class="form-group">
+        <label class="required">טלפון:</label>
+        <input type="tel" name="store_phone" id="store_phone" required>
+        <div class="error" id="store_phone_error">נא להזין מספר טלפון</div>
+      </div>
+
+      <div class="form-group">
+        <label class="required">מייל:</label>
+        <input type="email" name="store_email" id="store_email" required>
+        <div class="error" id="store_email_error">נא להזין כתובת מייל תקינה</div>
+      </div>
+
+      <div class="form-group">
+        <label class="required">שם איש קשר:</label>
+        <input type="text" name="contact_name" id="contact_name" required>
+        <div class="error" id="contact_name_error">נא להזין שם איש קשר</div>
+      </div>
+
+      <div class="form-group">
+        <label class="required">טלפון איש קשר להזמנות:</label>
+        <input type="tel" name="contact_phone" id="contact_phone" required>
+        <div class="error" id="contact_phone_error">נא להזין מספר טלפון</div>
+      </div>
+
+      <div class="form-group">
+        <label class="required">תמונת ת.ז של איש קשר:</label>
+        <div class="file-upload-container" id="id_photo_container">
+          <label class="file-upload-label" for="id_photo">צרף קובץ</label>
+          <input type="file" name="id_photo" id="id_photo" accept="image/*" required>
+          <div class="file-name" id="id_photo_name"></div>
+        </div>
+        <div class="error" id="id_photo_error">נא לצרף תמונת ת.ז</div>
+      </div>
+
+      <!-- סוג עסק -->
+      <div class="form-group">
+        <label class="required">בחר סוג עסק:</label>
+        <select name="business_type" id="business_type" onchange="toggleBusinessFields(this.value)" required>
+          <option value="">בחר</option>
+          <option value="company">חברה בע"מ</option>
+          <option value="authorized">עוסק מורשה</option>
+        </select>
+        <div class="error" id="business_type_error">נא לבחור סוג עסק</div>
+      </div>
+
+      <div id="company_section" class="hidden-section">
+        <div class="form-group">
+          <label class="required">מספר חברה:</label>
+          <input type="text" name="company_number" id="company_number" placeholder="הקלד מספר חברה">
+          <div class="error" id="company_number_error">נא להזין מספר חברה</div>
+        </div>
+        <div class="form-group">
+          <label class="required">צרף מסמכי חברה:</label>
+          <div class="file-upload-container" id="company_files_container">
+            <label class="file-upload-label" for="company_files">צרף קובץ</label>
+            <input type="file" name="company_files" id="company_files" multiple>
+            <div class="file-name" id="company_files_name"></div>
+          </div>
+          <div class="error" id="company_files_error">נא לצרף מסמכי חברה</div>
+        </div>
+      </div>
+
+      <div id="authorized_section" class="hidden-section">
+        <div class="form-group">
+          <label class="required">מספר עוסק מורשה:</label>
+          <input type="text" name="authorized_number" id="authorized_number" placeholder="הקלד מספר עוסק מורשה">
+          <div class="error" id="authorized_number_error">נא להזין מספר עוסק מורשה</div>
+        </div>
+        <div class="form-group">
+          <label class="required">צרף מסמכי עוסק מורשה:</label>
+          <div class="file-upload-container" id="authorized_files_container">
+            <label class="file-upload-label" for="authorized_files">צרף קובץ</label>
+            <input type="file" name="authorized_files" id="authorized_files" multiple>
+            <div class="file-name" id="authorized_files_name"></div>
+          </div>
+          <div class="error" id="authorized_files_error">נא לצרף מסמכי עוסק מורשה</div>
+        </div>
+      </div>
+
+      <!-- קבצים נוספים -->
+      <div class="form-group">
+        <label class="required">לוגו – תמונה:</label>
+        <div class="file-upload-container" id="logo_file_container">
+          <label class="file-upload-label" for="logo_file">צרף קובץ</label>
+          <input type="file" name="logo_file" id="logo_file" accept="image/*" required>
+          <div class="file-name" id="logo_file_name"></div>
+        </div>
+        <div class="error" id="logo_file_error">נא לצרף לוגו</div>
+      </div>
+
+      <div class="form-group">
+        <label class="required">תקנון – צרף קובץ:</label>
+        <div class="file-upload-container" id="terms_file_container">
+          <label class="file-upload-label" for="terms_file">צרף קובץ</label>
+          <input type="file" name="terms_file" id="terms_file" accept=".pdf,.doc,.docx" required>
+          <div class="file-name" id="terms_file_name"></div>
+        </div>
+        <div class="error" id="terms_file_error">נא לצרף תקנון</div>
+      </div>
+
+      <div class="form-group">
+        <label class="required">הצהרת נגישות – צרף קובץ:</label>
+        <div class="file-upload-container" id="accessibility_file_container">
+          <label class="file-upload-label" for="accessibility_file">צרף קובץ</label>
+          <input type="file" name="accessibility_file" id="accessibility_file" accept=".pdf,.doc,.docx" required>
+          <div class="file-name" id="accessibility_file_name"></div>
+        </div>
+        <div class="error" id="accessibility_file_error">נא לצרף הצהרת נגישות</div>
+      </div>
+
+      <!-- שעות פעילות -->
+      <div class="form-group">
+        <label>שעות פעילות העסק:</label>
+        <div class="business-hours">
+          <div class="day-hours">
+            <h4>ראשון</h4>
+            <select name="sunday_status"><option value="open">פתוח</option><option value="closed">סגור</option></select>
+            <input type="time" name="sunday_open" value="09:00"><input type="time" name="sunday_close" value="21:00">
+          </div>
+          <div class="day-hours">
+            <h4>שני</h4>
+            <select name="monday_status"><option value="open">פתוח</option><option value="closed">סגור</option></select>
+            <input type="time" name="monday_open" value="09:00"><input type="time" name="monday_close" value="21:00">
+          </div>
+          <div class="day-hours">
+            <h4>שלישי</h4>
+            <select name="tuesday_status"><option value="open">פתוח</option><option value="closed">סגור</option></select>
+            <input type="time" name="tuesday_open" value="09:00"><input type="time" name="tuesday_close" value="21:00">
+          </div>
+          <div class="day-hours">
+            <h4>רביעי</h4>
+            <select name="wednesday_status"><option value="open">פתוח</option><option value="closed">סגור</option></select>
+            <input type="time" name="wednesday_open" value="09:00"><input type="time" name="wednesday_close" value="21:00">
+          </div>
+          <div class="day-hours">
+            <h4>חמישי</h4>
+            <select name="thursday_status"><option value="open">פתוח</option><option value="closed">סגור</option></select>
+            <input type="time" name="thursday_open" value="09:00"><input type="time" name="thursday_close" value="21:00">
+          </div>
+          <div class="day-hours">
+            <h4>שישי</h4>
+            <select name="friday_status"><option value="open">פתוח</option><option value="closed" selected>סגור</option></select>
+            <input type="time" name="friday_open" value="09:00"><input type="time" name="friday_close" value="14:00">
+          </div>
+          <div class="day-hours">
+            <h4>שבת</h4>
+            <select name="saturday_status"><option value="open">פתוח</option><option value="closed" selected>סגור</option></select>
+            <input type="time" name="saturday_open" value="20:00"><input type="time" name="saturday_close" value="23:00">
+          </div>
+        </div>
+      </div>
+
+      <!-- אודות העסק -->
+      <div class="form-group">
+        <label>אודות העסק:</label>
+        <textarea name="about_business" id="about_business" placeholder="ספרו לנו על העסק שלכם - מה אתם מציעים, מה מייחד אתכם, היסטוריה, ערכים וכו'..." rows="5"></textarea>
+      </div>
+
+      <!-- ימי חלוקה -->
+      <div class="form-group">
+        <label>עלות משלוח לפי אזורים:</label>
+        <div class="delivery-zones">
+          <div class="zone-item">
+            <input type="text" name="zone_city[]" placeholder="שם עיר/אזור">
+            <input type="number" name="zone_cost[]" placeholder="עלות משלוח" min="0" step="0.01">
+            <select name="zone_day[]">
+              <option value="">בחר יום חלוקה</option>
+              <option value="sunday">יום א'</option><option value="monday">יום ב'</option><option value="tuesday">יום ג'</option><option value="wednesday">יום ד'</option><option value="thursday">יום ה'</option><option value="friday">יום ו'</option><option value="saturday">יום שבת</option>
+            </select>
+          </div>
+        </div>
+        <button type="button" onclick="addZone()">+ הוסף אזור</button>
+      </div>
+
+      <!-- שעות חלוקה - חלונות רצופים -->
+      <div class="form-group">
+        <label>שעות חלוקה לפי ימים (חלונות רצופים):</label>
+        <div class="delivery-schedule-integrated">
+          <!-- יום א' -->
+          <div class="day-slot-card-integrated" data-day="sunday">
+            <div class="day-header-integrated" onclick="toggleDayIntegrated('sunday')">
+              <span class="day-name-integrated">יום א׳ - ראשון</span>
+              <span class="day-summary-integrated" id="sunday_summary_integrated"></span>
+              <span class="chevron-integrated">▼</span>
+            </div>
+            <div class="day-body-integrated" id="sunday_content_integrated">
+              <div class="range-row-integrated">
+                <label>טווח משלוחים:</label>
+                <div class="range-inputs-integrated">
+                  <input type="time" name="sunday_start_integrated" value="09:00" min="06:00" max="23:00" onchange="buildSlotsIntegrated(this)">
+                  <span>עד</span>
+                  <input type="time" name="sunday_end_integrated" value="16:00" min="06:00" max="23:00" onchange="buildSlotsIntegrated(this)">
+                </div>
+              </div>
+              <div class="window-row-integrated">
+                <label>אורך חלון משלוח:</label>
+                <select name="sunday_window_integrated" onchange="buildSlotsIntegrated(this)">
+                  <option value="2">2 שעות</option>
+                  <option value="3">3 שעות</option>
+                </select>
+              </div>
+              <div class="slots-list-integrated" id="sunday_slots_integrated"></div>
+            </div>
+          </div>
+          <!-- יום ב' -->
+          <div class="day-slot-card-integrated" data-day="monday">
+            <div class="day-header-integrated" onclick="toggleDayIntegrated('monday')">
+              <span class="day-name-integrated">יום ב׳ - שני</span>
+              <span class="day-summary-integrated" id="monday_summary_integrated"></span>
+              <span class="chevron-integrated">▼</span>
+            </div>
+            <div class="day-body-integrated" id="monday_content_integrated">
+              <div class="range-row-integrated">
+                <label>טווח משלוחים:</label>
+                <div class="range-inputs-integrated">
+                  <input type="time" name="monday_start_integrated" value="09:00" min="06:00" max="23:00" onchange="buildSlotsIntegrated(this)">
+                  <span>עד</span>
+                  <input type="time" name="monday_end_integrated" value="16:00" min="06:00" max="23:00" onchange="buildSlotsIntegrated(this)">
+                </div>
+              </div>
+              <div class="window-row-integrated">
+                <label>אורך חלון משלוח:</label>
+                <select name="monday_window_integrated" onchange="buildSlotsIntegrated(this)">
+                  <option value="2">2 שעות</option>
+                  <option value="3">3 שעות</option>
+                </select>
+              </div>
+              <div class="slots-list-integrated" id="monday_slots_integrated"></div>
+            </div>
+          </div>
+          <!-- יום ג' -->
+          <div class="day-slot-card-integrated" data-day="tuesday">
+            <div class="day-header-integrated" onclick="toggleDayIntegrated('tuesday')">
+              <span class="day-name-integrated">יום ג׳ - שלישי</span>
+              <span class="day-summary-integrated" id="tuesday_summary_integrated"></span>
+              <span class="chevron-integrated">▼</span>
+            </div>
+            <div class="day-body-integrated" id="tuesday_content_integrated">
+              <div class="range-row-integrated">
+                <label>טווח משלוחים:</label>
+                <div class="range-inputs-integrated">
+                  <input type="time" name="tuesday_start_integrated" value="09:00" min="06:00" max="23:00" onchange="buildSlotsIntegrated(this)">
+                  <span>עד</span>
+                  <input type="time" name="tuesday_end_integrated" value="16:00" min="06:00" max="23:00" onchange="buildSlotsIntegrated(this)">
+                </div>
+              </div>
+              <div class="window-row-integrated">
+                <label>אורך חלון משלוח:</label>
+                <select name="tuesday_window_integrated" onchange="buildSlotsIntegrated(this)">
+                  <option value="2">2 שעות</option>
+                  <option value="3">3 שעות</option>
+                </select>
+              </div>
+              <div class="slots-list-integrated" id="tuesday_slots_integrated"></div>
+            </div>
+          </div>
+          <!-- יום ד' -->
+          <div class="day-slot-card-integrated" data-day="wednesday">
+            <div class="day-header-integrated" onclick="toggleDayIntegrated('wednesday')">
+              <span class="day-name-integrated">יום ד׳ - רביעי</span>
+              <span class="day-summary-integrated" id="wednesday_summary_integrated"></span>
+              <span class="chevron-integrated">▼</span>
+            </div>
+            <div class="day-body-integrated" id="wednesday_content_integrated">
+              <div class="range-row-integrated">
+                <label>טווח משלוחים:</label>
+                <div class="range-inputs-integrated">
+                  <input type="time" name="wednesday_start_integrated" value="09:00" min="06:00" max="23:00" onchange="buildSlotsIntegrated(this)">
+                  <span>עד</span>
+                  <input type="time" name="wednesday_end_integrated" value="16:00" min="06:00" max="23:00" onchange="buildSlotsIntegrated(this)">
+                </div>
+              </div>
+              <div class="window-row-integrated">
+                <label>אורך חלון משלוח:</label>
+                <select name="wednesday_window_integrated" onchange="buildSlotsIntegrated(this)">
+                  <option value="2">2 שעות</option>
+                  <option value="3">3 שעות</option>
+                </select>
+              </div>
+              <div class="slots-list-integrated" id="wednesday_slots_integrated"></div>
+            </div>
+          </div>
+          <!-- יום ה' -->
+          <div class="day-slot-card-integrated" data-day="thursday">
+            <div class="day-header-integrated" onclick="toggleDayIntegrated('thursday')">
+              <span class="day-name-integrated">יום ה׳ - חמישי</span>
+              <span class="day-summary-integrated" id="thursday_summary_integrated"></span>
+              <span class="chevron-integrated">▼</span>
+            </div>
+            <div class="day-body-integrated" id="thursday_content_integrated">
+              <div class="range-row-integrated">
+                <label>טווח משלוחים:</label>
+                <div class="range-inputs-integrated">
+                  <input type="time" name="thursday_start_integrated" value="09:00" min="06:00" max="23:00" onchange="buildSlotsIntegrated(this)">
+                  <span>עד</span>
+                  <input type="time" name="thursday_end_integrated" value="16:00" min="06:00" max="23:00" onchange="buildSlotsIntegrated(this)">
+                </div>
+              </div>
+              <div class="window-row-integrated">
+                <label>אורך חלון משלוח:</label>
+                <select name="thursday_window_integrated" onchange="buildSlotsIntegrated(this)">
+                  <option value="2">2 שעות</option>
+                  <option value="3">3 שעות</option>
+                </select>
+              </div>
+              <div class="slots-list-integrated" id="thursday_slots_integrated"></div>
+            </div>
+          </div>
+          <!-- יום ו' -->
+          <div class="day-slot-card-integrated" data-day="friday">
+            <div class="day-header-integrated" onclick="toggleDayIntegrated('friday')">
+              <span class="day-name-integrated">יום ו׳ - שישי</span>
+              <span class="day-summary-integrated" id="friday_summary_integrated"></span>
+              <span class="chevron-integrated">▼</span>
+            </div>
+            <div class="day-body-integrated" id="friday_content_integrated">
+              <div class="range-row-integrated">
+                <label>טווח משלוחים:</label>
+                <div class="range-inputs-integrated">
+                  <input type="time" name="friday_start_integrated" value="09:00" min="06:00" max="23:00" onchange="buildSlotsIntegrated(this)">
+                  <span>עד</span>
+                  <input type="time" name="friday_end_integrated" value="14:00" min="06:00" max="23:00" onchange="buildSlotsIntegrated(this)">
+                </div>
+              </div>
+              <div class="window-row-integrated">
+                <label>אורך חלון משלוח:</label>
+                <select name="friday_window_integrated" onchange="buildSlotsIntegrated(this)">
+                  <option value="2">2 שעות</option>
+                  <option value="3">3 שעות</option>
+                </select>
+              </div>
+              <div class="slots-list-integrated" id="friday_slots_integrated"></div>
+            </div>
+          </div>
+          <!-- שבת -->
+          <div class="day-slot-card-integrated" data-day="saturday">
+            <div class="day-header-integrated" onclick="toggleDayIntegrated('saturday')">
+              <span class="day-name-integrated">שבת</span>
+              <span class="day-summary-integrated" id="saturday_summary_integrated"></span>
+              <span class="chevron-integrated">▼</span>
+            </div>
+            <div class="day-body-integrated" id="saturday_content_integrated">
+              <div class="range-row-integrated">
+                <label>טווח משלוחים:</label>
+                <div class="range-inputs-integrated">
+                  <input type="time" name="saturday_start_integrated" value="20:00" min="06:00" max="23:00" onchange="buildSlotsIntegrated(this)">
+                  <span>עד</span>
+                  <input type="time" name="saturday_end_integrated" value="23:00" min="06:00" max="23:00" onchange="buildSlotsIntegrated(this)">
+                </div>
+              </div>
+              <div class="window-row-integrated">
+                <label>אורך חלון משלוח:</label>
+                <select name="saturday_window_integrated" onchange="buildSlotsIntegrated(this)">
+                  <option value="2">2 שעות</option>
+                  <option value="3">3 שעות</option>
+                </select>
+              </div>
+              <div class="slots-list-integrated" id="saturday_slots_integrated"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- סניפים -->
+      <div class="form-group">
+        <label>סניפים:</label>
+        <div class="branches-list" id="branches_list">
+          <input type="text" name="branch_name[]" placeholder="שם סניף">
+          <input type="text" name="branch_address[]" placeholder="כתובת סניף">
+        </div>
+        <button type="button" onclick="addBranch()">+ הוסף סניף</button>
+      </div>
+
+      <!-- פרטי מערכת -->
+      <div class="form-group">
+        <label>חברת קופות:</label>
+        <select name="pos_system">
+          <option value="">בחר מערכת קופות</option>
+          <option value="square">Square</option>
+          <option value="lightspeed">Lightspeed</option>
+          <option value="shopify">Shopify POS</option>
+          <option value="vend">Vend</option>
+          <option value="other">אחר</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <div class="checkbox-group">
+          <input type="checkbox" name="has_pickup_system" id="has_pickup_system">
+          <label for="has_pickup_system">מערכת ליקוט שלנו</label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>סכום מינימום הזמנה:</label>
+        <input type="number" name="min_order_amount" placeholder="0" min="0" step="0.01">
+      </div>
+
+      <div class="form-group">
+        <label>משלוח חינם מסכום:</label>
+        <input type="number" name="free_shipping_amount" placeholder="0" min="0" step="0.01">
+      </div>
+
+      <!-- קודים -->
+      <div class="form-group">
+        <label>קוד פיסקל של גוגל (GTag):</label>
+        <textarea name="google_tag" id="google_tag" placeholder="לדוגמה: G-XXXXXXXXXX"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>פיקסל של פייסבוק (Meta Pixel):</label>
+        <textarea name="facebook_pixel" id="facebook_pixel" placeholder="הכנס קוד פיקסל"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>וואטסאפ (מספר בפורמט בינלאומי):</label>
+        <input type="text" name="whatsapp_number" id="whatsapp_number" placeholder="972587123456">
+      </div>
+
+      <button type="submit" class="submit-btn">שלח פרטים</button>
+      <div id="successMsg">הטופס נשלח בהצלחה! ניצור איתך קשר בקרוב.</div>
+    </form>
+  </div>
+
+<script>
+/* ---------- פונקציות עיקריות ---------- */
+function toggleBusinessFields(val){
+  document.getElementById("company_section").style.display=val==="company"?"block":"none";
+  document.getElementById("authorized_section").style.display=val==="authorized"?"block":"none";
+}
+function addZone(){
+  const container=document.querySelector('.delivery-zones');
+  const zone=document.createElement('div');zone.className='zone-item';
+  zone.innerHTML=`<input type="text" name="zone_city[]" placeholder="שם עיר/אזור"><input type="number" name="zone_cost[]" placeholder="עלות משלוח" min="0" step="0.01"><select name="zone_day[]"><option value="">בחר יום חלוקה</option><option value="sunday">יום א'</option><option value="monday">יום ב'</option><option value="tuesday">יום ג'</option><option value="wednesday">יום ד'</option><option value="thursday">יום ה'</option><option value="friday">יום ו'</option><option value="saturday">יום שבת</option></select>`;
+  container.appendChild(zone);
+}
+function addBranch(){
+  const container=document.getElementById('branches_list');
+  const branch=document.createElement('div');
+  branch.innerHTML=`<input type="text" name="branch_name[]" placeholder="שם סניף"><input type="text" name="branch_address[]" placeholder="כתובת סניף">`;
+  container.appendChild(branch);
+}
+
+/* ---------- שעות חלוקה - חלונות רצופים ---------- */
+function buildSlotsIntegrated(element){
+  const day=element.name.split('_')[0];
+  const card=element.closest('.day-slot-card-integrated');
+  const startInput=card.querySelector('input[type="time"]');
+  const endInput=card.querySelectorAll('input[type="time"]')[1];
+  const windowSize=parseInt(card.querySelector('select').value);
+  const slotsContainer=card.querySelector('.slots-list-integrated');
+  const summarySpan=document.getElementById(day+'_summary_integrated');
+
+  const slots=createSequentialSlotsIntegrated(startInput.value,endInput.value,windowSize);
+  slotsContainer.innerHTML='';
+  if(!slots.length){slotsContainer.innerHTML='<div class="slot-item-integrated">לא ניתן ליצור חלונות בתווח שנבחר</div>';summarySpan.textContent='';return;}
+  slots.forEach((slot,i)=>{
+    const div=document.createElement('div');div.className='slot-item-integrated';
+    div.innerHTML=`<span class="slot-text-integrated">חלון ${i+1}: ${slot.start}-${slot.end}</span><button class="slot-remove-integrated" onclick="this.parentElement.remove();updateSummaryIntegrated('${day}')">×</button>`;
+    slotsContainer.appendChild(div);
+  });
+  summarySpan.textContent=`${slots.length} חלונות (${windowSize} שע')`;
+}
+function createSequentialSlotsIntegrated(startStr,endStr,windowHours){
+  if(!startStr||!endStr)return[];const start=timeToMinutesIntegrated(startStr);const end=timeToMinutesIntegrated(endStr);const windowMinutes=windowHours*60;const slots=[];let current=start;
+  while(current+windowMinutes<=end){const slotEnd=current+windowMinutes;slots.push({start:minutesToTimeIntegrated(current),end:minutesToTimeIntegrated(slotEnd)});current=slotEnd;}return slots;
+}
+function timeToMinutesIntegrated(t){const[h,m]=t.split(':').map(Number);return h*60+m;}
+function minutesToTimeIntegrated(m){const h=Math.floor(m/60).toString().padStart(2,'0');const min=(m%60).toString().padStart(2,'0');return`${h}:${min}`;}
+function updateSummaryIntegrated(day){const card=document.querySelector(`[data-day="${day}"].day-slot-card-integrated`);const count=card.querySelectorAll('.slot-item-integrated').length;const windowSel=card.querySelector('select[name$="_window_integrated"]');const summary=count?`${count} חלונות (${windowSel.value} שע')`:'';document.getElementById(day+'_summary_integrated').textContent=summary;}
+function toggleDayIntegrated(day){const card=document.querySelector(`[data-day="${day}"].day-slot-card-integrated`);if(window.innerWidth<=480)card.classList.toggle('active');}
+
+/* ---------- וולידציה ושליחה ---------- */
+function validateEmail(email){const re=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;return re.test(email);}
+function validatePhone(phone){const re=/^[\d\s\-\+]+$/;return re.test(phone)&&phone.length>=9;}
+function showError(fieldId,show=true){const errorElement=document.getElementById(fieldId+'_error');if(errorElement)errorElement.style.display=show?'block':'none';}
+function validateField(field){const value=field.value.trim();const fieldId=field.id;if(value){field.classList.add('valid');field.classList.remove('invalid');if(field.type==='file')document.getElementById(fieldId+'_container').classList.add('valid');document.getElementById(fieldId+'_container').classList.remove('invalid');showError(fieldId,false);}else{field.classList.add('invalid');field.classList.remove('valid');if(field.type==='file')document.getElementById(fieldId+'_container').classList.add('invalid');document.getElementById(fieldId+'_container').classList.remove('valid');showError(fieldId);}}
+function validateForm(){let isValid=true;const requiredFields=['store_name','store_address','store_phone','store_email','contact_name','contact_phone'];requiredFields.forEach(field=>{const value=document.getElementById(field).value.trim();if(!value){showError(field);isValid=false;}else{showError(field,false);}});const email=document.getElementById('store_email').value.trim();if(email&&!validateEmail(email)){showError('store_email');isValid=false;}const phones=['store_phone','contact_phone'];phones.forEach(phoneField=>{const phone=document.getElementById(phoneField).value.trim();if(phone&&!validatePhone(phone)){showError(phoneField);isValid=false;}});const requiredFiles=['id_photo','logo_file','terms_file','accessibility_file'];requiredFiles.forEach(fileField=>{const file=document.getElementById(fileField).files[0];if(!file){showError(fileField);isValid=false;}else{showError(fileField,false);}});const businessType=document.getElementById('business_type').value;if(!businessType){showError('business_type');isValid=false;}else{showError('business_type',false);if(businessType==='company'){const companyNumber=document.getElementById('company_number').value.trim();if(!companyNumber){showError('company_number');isValid=false;}else{showError('company_number',false);}const companyFiles=document.getElementById('company_files').files[0];if(!companyFiles){showError('company_files');isValid=false;}else{showError('company_files',false);}}else if(businessType==='authorized'){const authorizedNumber=document.getElementById('authorized_number').value.trim();if(!authorizedNumber){showError('authorized_number');isValid=false;}else{showError('authorized_number',false);}const authorizedFiles=document.getElementById('authorized_files').files[0];if(!authorizedFiles){showError('authorized_files');isValid=false;}else{showError('authorized_files',false);}}}return isValid;}
+
+document.getElementById("clientForm").addEventListener("submit",function(e){e.preventDefault();if(!validateForm())return;const form=e.target;const formData=new FormData(form);formData.append('timestamp',new Date().toISOString());fetch("https://docs.google.com/forms/d/e/1xZPYqsqnl6cZeCucfkzDTYlRBBC-rbipHLCAlHmvVnk/formResponse",{method:"POST",body:formData,headers:{"Accept":"application/json"}}).then(res=>res.text()).then(msg=>{document.getElementById("successMsg").style.display="block";form.reset();document.querySelectorAll('.file-name').forEach(el=>el.textContent='');document.querySelectorAll('.error').forEach(el=>el.style.display='none');document.querySelectorAll('.valid,.invalid').forEach(el=>el.classList.remove('valid','invalid'));window.scrollTo({top:0,behavior:'smooth'});}).catch(err=>{alert("אירעה שגיאה בשליחה. נא לנסות שוב.");console.error('Error:',err);});});
+
+/* ---------- אירועים ---------- */
+document.querySelectorAll('input[type="file"]').forEach(input=>{input.addEventListener('change',function(e){const files=Array.from(e.target.files);const fileNames=files.map(file=>file.name).join(', ');const fileNameElement=document.getElementById(e.target.id+'_name');if(fileNameElement)fileNameElement.textContent=fileNames?`קבצים שנבחרו: ${fileNames}`:'';});});
+document.querySelectorAll('input[type="text"],input[type="tel"],input[type="email"],select').forEach(input=>{input.addEventListener('blur',function(){validateField(this);});input.addEventListener('input',function(){if(this.value.trim()){this.classList.add('valid');this.classList.remove('invalid');showError(this.id,false);}});});
+document.querySelectorAll('input[type="file"]').forEach(input=>{input.addEventListener('change',function(){const container=document.getElementById(this.id+'_container');if(this.files[0]){container.classList.add('valid');container.classList.remove('invalid');showError(this.id,false);}else{container.classList.add('invalid');container.classList.remove('valid');showError(this.id);}});});
+document.getElementById('store_email').addEventListener('blur',function(){const email=this.value.trim();if(email&&!validateEmail(email)){showError('store_email');}else{showError('store_email',false);}});
+document.querySelectorAll('input[type=tel]').forEach(input=>{input.addEventListener('blur',function(){const phone=this.value.trim();if(phone&&!validatePhone(phone)){showError(this.id);}else{showError(this.id,false);}});});
+
+/* אתחול */
+document.addEventListener('DOMContentLoaded',()=>{
+  // פתח את יום ראשון by default
+  toggleDayIntegrated('sunday');
+  // יצור חלונות ראשוניים
+  document.querySelectorAll('.day-slot-card-integrated').forEach(card=>{
+    const select=card.querySelector('select[name$="_window_integrated"]');
+    buildSlotsIntegrated(select);
+    card.querySelectorAll('input[type=time]').forEach(inp=>inp.addEventListener('change',()=>buildSlotsIntegrated(select)));
+  });
+  // מניעת זום כפול ב-iOS
+  document.addEventListener('gesturestart',e=>e.preventDefault());
+});
+</script>
+
+</body>
+</html>
