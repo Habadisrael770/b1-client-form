@@ -81,9 +81,6 @@
 
         .accordion-section.active {
             z-index: 10;
-        }
-
-        .accordion-section.active {
             border-color: var(--green-primary);
         }
 
@@ -98,9 +95,8 @@
             cursor: pointer;
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
+            align-items: center;
             position: relative;
-            gap: 1rem;
         }
 
         .accordion-section.active .accordion-header {
@@ -115,15 +111,11 @@
             align-items: center;
             gap: 0.75rem;
             flex: 1;
-            flex-wrap: wrap;
-            word-break: break-word;
         }
 
         .accordion-icon {
             font-size: 1.5rem;
             transition: transform 0.3s;
-            flex-shrink: 0;
-            min-width: 1.5rem;
         }
 
         .accordion-section.active .accordion-icon {
@@ -149,12 +141,13 @@
 
         .accordion-content {
             max-height: 0;
-            overflow: visible;
+            overflow: hidden;  /* שינוי קריטי – זה פותר את הרווחים */
             transition: max-height 0.4s ease;
         }
 
         .accordion-section.active .accordion-content {
             max-height: 5000px;
+            overflow: hidden;  /* בטוח גם כאן */
         }
 
         .accordion-body {
@@ -176,8 +169,6 @@
         .form-group {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
         }
 
         .form-label {
@@ -216,12 +207,10 @@
         .file-upload {
             border: 2px dashed var(--gray-medium);
             border-radius: 8px;
-            padding: 1.5rem;
+            padding: 2rem;
             text-align: center;
             cursor: pointer;
             background: var(--gray-light);
-            display: block;
-            overflow: visible;
         }
 
         .file-upload:hover {
@@ -419,20 +408,6 @@
             color: var(--green-primary);
         }
 
-        /* הסתרת פיקסלים וscripts חיצוניים */
-        script,
-        noscript,
-        [data-pixel],
-        [data-gtag],
-        iframe[src*="facebook"],
-        iframe[src*="google"],
-        iframe[src*="analytics"] {
-            display: none !important;
-            visibility: hidden !important;
-            position: absolute !important;
-            z-index: -9999 !important;
-        }
-
         @media (max-width: 768px) {
             body {
                 padding: 1rem 0.5rem;
@@ -440,19 +415,6 @@
 
             .container {
                 border-width: 2px;
-            }
-
-            .accordion-section {
-                position: relative;
-                z-index: 1;
-                margin-bottom: 3rem;
-                overflow: visible;
-            }
-
-            .accordion-section.active {
-                z-index: 100;
-                margin-bottom: 3rem;
-                overflow: visible;
             }
 
             .header {
@@ -485,16 +447,8 @@
                 left: 1rem;
             }
 
-            .accordion-header {
-                padding: 1rem 1rem;
-            }
-
-            .accordion-content {
-                overflow: visible !important;
-            }
-
             .accordion-body {
-                overflow: visible !important;
+                padding: 1.5rem 1rem;
             }
 
             .form-grid, 
@@ -535,6 +489,10 @@
             .branch-item {
                 padding: 1rem;
             }
+
+            .accordion-content {
+                overflow: hidden !important;  /* מחזק את ההסתרה במובייל */
+            }
         }
     </style>
 </head>
@@ -570,7 +528,6 @@
         </div>
 
         <form class="form-content" id="businessForm">
-            
             <!-- 1. פרטי העסק -->
             <div class="accordion-section active" data-section="business" data-required="true">
                 <div class="accordion-header" onclick="toggleAccordion(this)">
@@ -712,7 +669,7 @@
                 </div>
             </div>
 
-            <!-- 4. קופות (9) -->
+            <!-- 4. קופות קיימות -->
             <div class="accordion-section" data-section="cashRegisters" data-required="true">
                 <div class="accordion-header" onclick="toggleAccordion(this)">
                     <div class="accordion-title">
@@ -765,7 +722,7 @@
                 </div>
             </div>
 
-            <!-- 5. תשלום -->
+            <!-- 5. אפשרויות תשלום -->
             <div class="accordion-section" data-section="payment" data-required="true">
                 <div class="accordion-header" onclick="toggleAccordion(this)">
                     <div class="accordion-title">
@@ -823,7 +780,7 @@
                 </div>
             </div>
 
-            <!-- 7. שעות -->
+            <!-- 7. שעות פעילות -->
             <div class="accordion-section" data-section="hours" data-required="true">
                 <div class="accordion-header" onclick="toggleAccordion(this)">
                     <div class="accordion-title">
@@ -839,7 +796,7 @@
                 </div>
             </div>
 
-            <!-- 8. ליקוט -->
+            <!-- 8. ליקוט הזמנות -->
             <div class="accordion-section" data-section="picking" data-required="true">
                 <div class="accordion-header" onclick="toggleAccordion(this)">
                     <div class="accordion-title">
@@ -864,7 +821,7 @@
                 </div>
             </div>
 
-            <!-- 9. פיקסלים -->
+            <!-- 9. פיקסלים - רשתות חברתיות -->
             <div class="accordion-section" data-section="pixels">
                 <div class="accordion-header" onclick="toggleAccordion(this)">
                     <div class="accordion-title">
@@ -900,7 +857,6 @@
             <div style="margin-top: 2rem; padding-top: 2rem; border-top: 3px solid var(--gray-medium);">
                 <button type="submit" class="btn-submit">📤 שלח טופס</button>
             </div>
-
         </form>
     </div>
 
