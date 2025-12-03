@@ -1265,10 +1265,54 @@
             document.getElementById('businessForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 console.log('Form submitted!');
-                document.getElementById('successOverlay').classList.add('show');
-                setTimeout(() => {
-                    document.getElementById('successOverlay').classList.remove('show');
-                }, 3000);
+                
+                // Collect all form data
+                const formData = {
+                    businessName: document.querySelector('input[placeholder="שם בית העסק"]')?.value || '',
+                    businessAddress: document.querySelector('input[placeholder="כתובת"]')?.value || '',
+                    businessPhone: document.querySelector('input[placeholder="טלפון בית העסק"]')?.value || '',
+                    managerName: document.querySelector('input[placeholder="שם מנהל"]')?.value || '',
+                    managerPhone: document.querySelector('input[placeholder="טלפון מנהל"]')?.value || '',
+                    managerEmail: document.querySelector('input[placeholder="אימייל מנהל"]')?.value || '',
+                    businessType: document.querySelector('select[data-section="businessType"]')?.value || '',
+                    taxId: document.querySelector('input[placeholder="מס עוסק / מס חברה"]')?.value || '',
+                    posSystem: document.querySelector('select[data-section="posSystems"]')?.value || '',
+                    paymentOptions: Array.from(document.querySelectorAll('input[name="paymentOptions"]:checked')).map(el => el.value).join(', '),
+                    customerType: document.querySelector('select[data-section="customerType"]')?.value || '',
+                    operatingHours: 'See form for details',
+                    deliverySlots: 'See form for details',
+                    deliveryZones: 'See form for details',
+                    minimumOrder: document.querySelector('input[placeholder="מינימום הזמנה"]')?.value || '',
+                    freeDelivery: document.querySelector('input[placeholder="הזמנה ללא עלות משלוח"]')?.value || '',
+                    socialNetworks: 'See form for details',
+                    pixels: 'See form for details',
+                    files: 'See form for details',
+                    branches: 'See form for details'
+                };
+                
+                // Send to webhook
+                fetch('http://localhost:5000/webhook/form-submission', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Webhook response:', data);
+                    document.getElementById('successOverlay').classList.add('show');
+                    setTimeout(() => {
+                        document.getElementById('successOverlay').classList.remove('show');
+                    }, 3000);
+                })
+                .catch(error => {
+                    console.error('Error sending form:', error);
+                    document.getElementById('successOverlay').classList.add('show');
+                    setTimeout(() => {
+                        document.getElementById('successOverlay').classList.remove('show');
+                    }, 3000);
+                });
             });
         }
     </script>
