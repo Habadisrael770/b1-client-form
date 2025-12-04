@@ -1306,6 +1306,14 @@
             const defaultOpen = '09:00';
             const defaultClose = '18:00';
             const container = document.getElementById('hoursContainer');
+            
+            if (!container) {
+                console.error('hoursContainer not found');
+                return;
+            }
+            
+            // Clear any existing content
+            container.innerHTML = '';
 
             days.forEach((day, i) => {
                 const slot = document.createElement('div');
