@@ -1302,10 +1302,13 @@
         }
 
         function initHours() {
+            console.log('initHours called');
             const days = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
             const defaultOpen = '09:00';
             const defaultClose = '18:00';
             const container = document.getElementById('hoursContainer');
+            
+            console.log('Container found:', !!container);
             
             if (!container) {
                 console.error('hoursContainer not found');
@@ -1314,6 +1317,7 @@
             
             // Clear any existing content
             container.innerHTML = '';
+            console.log('Container cleared, starting to populate');
 
             days.forEach((day, i) => {
                 const slot = document.createElement('div');
