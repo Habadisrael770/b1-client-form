@@ -23,33 +23,36 @@
             --gray-dark: #333333;
             --black: #000000;
             --red: #dc3545;
-            --bg-color: #efefef;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--bg-color);
-            padding: 0;
+            background: var(--gray-bg);
+            padding: 2rem 1rem;
             color: var(--gray-dark);
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1000px;
             width: 100%;
             margin: 0 auto;
             background: var(--white);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            overflow: hidden;
         }
 
         /* Banner Section */
         .banner-section {
             position: relative;
-            height: 300px;
+            height: 250px;
             background: linear-gradient(135deg, var(--green-primary), var(--green-dark));
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            margin: 2rem;
+            border-radius: 12px;
         }
 
         .banner-image {
@@ -65,75 +68,21 @@
             width: 100%;
             height: 100%;
             background: rgba(32, 216, 91, 0.7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            z-index: 2;
+            z-index: 1;
         }
 
-        .banner-content {
+        /* Typewriter Title */
+        .typewriter-title {
             text-align: center;
-            color: var(--white);
-            z-index: 3;
-        }
-
-        .banner-content h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .banner-content p {
-            font-size: 1.2rem;
-            opacity: 0.95;
-        }
-
-        .banner-controls {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            z-index: 4;
-            display: flex;
-            gap: 10px;
-        }
-
-        .banner-btn {
-            padding: 0.5rem 1rem;
-            background: var(--white);
-            color: var(--gray-dark);
-            border: 2px solid var(--black);
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        .banner-btn:hover {
-            background: var(--gray-light);
-        }
-
-        /* Color Picker */
-        .color-picker-section {
             padding: 2rem;
-            background: var(--gray-light);
-            border-bottom: 2px solid var(--gray-medium);
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+            margin: 0 2rem;
         }
 
-        .color-picker-label {
-            font-weight: 600;
-            font-size: 1rem;
-        }
-
-        .color-picker-input {
-            width: 50px;
-            height: 50px;
-            border: 2px solid var(--black);
-            border-radius: 6px;
-            cursor: pointer;
+        .typewriter-title h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--green-primary);
+            min-height: 60px;
         }
 
         /* Main Content */
@@ -183,6 +132,11 @@
             color: var(--red);
         }
 
+        .form-label .optional {
+            color: var(--gray-medium);
+            font-size: 0.9rem;
+        }
+
         .form-input,
         .form-select {
             padding: 0.75rem;
@@ -197,6 +151,63 @@
             outline: none;
             border-color: var(--green-primary);
             box-shadow: 0 0 0 3px rgba(32, 216, 91, 0.1);
+        }
+
+        /* Signature Section */
+        .signature-section {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: var(--white);
+            border-radius: 8px;
+            border: 2px solid var(--gray-medium);
+        }
+
+        .signature-canvas {
+            width: 100%;
+            height: 150px;
+            border: 2px solid var(--gray-medium);
+            border-radius: 6px;
+            cursor: crosshair;
+            background: var(--white);
+        }
+
+        .signature-controls {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .btn-clear {
+            padding: 0.5rem 1rem;
+            background: var(--red);
+            color: var(--white);
+            border: 2px solid var(--black);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-clear:hover {
+            opacity: 0.9;
+        }
+
+        /* Marketing Consent */
+        .marketing-consent {
+            margin-top: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .marketing-consent input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .marketing-consent label {
+            font-size: 0.95rem;
+            cursor: pointer;
         }
 
         /* Categories Section */
@@ -233,7 +244,7 @@
 
         .categories-grid {
             display: none;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 1rem;
             margin-top: 1.5rem;
         }
@@ -243,7 +254,7 @@
         }
 
         .category-card {
-            background: var(--gray-light);
+            background: var(--white);
             padding: 1.5rem;
             border-radius: 8px;
             border: 2px solid var(--gray-medium);
@@ -258,7 +269,6 @@
 
         .category-card:hover {
             border-color: var(--green-primary);
-            background: var(--white);
             transform: translateY(-5px);
         }
 
@@ -275,6 +285,11 @@
         .category-name {
             font-weight: 600;
             font-size: 0.9rem;
+            color: var(--black);
+        }
+
+        .category-card.selected .category-name {
+            color: var(--white);
         }
 
         /* Submit Button */
@@ -301,28 +316,31 @@
             background: var(--yellow-dark);
         }
 
+        .btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .form-row {
                 grid-template-columns: 1fr;
             }
 
-            .banner-content h1 {
-                font-size: 1.8rem;
-            }
-
             .categories-grid {
-                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                grid-template-columns: repeat(2, 1fr);
             }
 
-            .banner-controls {
-                flex-direction: column;
-                right: 10px;
-                bottom: 10px;
+            .banner-section {
+                margin: 1rem;
+            }
+
+            .typewriter-title h1 {
+                font-size: 1.5rem;
             }
         }
 
-        /* Success Message */
+        /* Success Message with Confetti */
         .success-overlay {
             position: fixed;
             top: 0;
@@ -346,6 +364,7 @@
             border-radius: 12px;
             text-align: center;
             border: 3px solid var(--green-primary);
+            position: relative;
         }
 
         .success-icon {
@@ -359,28 +378,50 @@
             font-weight: 700;
             color: var(--gray-dark);
         }
+
+        /* Confetti */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: var(--green-primary);
+            animation: confetti-fall 3s linear forwards;
+        }
+
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Typewriter animation */
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1.2em;
+            background: var(--green-primary);
+            margin-left: 5px;
+            animation: blink 1s infinite;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <!-- Banner Section -->
         <div class="banner-section">
-            <img id="bannerImage" class="banner-image" src="https://via.placeholder.com/1200x300?text=B1+Market+Club" alt="Banner">
+            <img id="bannerImage" class="banner-image" src="https://via.placeholder.com/1000x250?text=B1+Market+Club" alt="Banner">
             <div class="banner-overlay"></div>
-            <div class="banner-content">
-                <h1>🎉 מועדון לקוחות B1 Market</h1>
-                <p>הצטרפו למועדון הלקוחות שלנו וקבלו הטבות בלעדיות!</p>
-            </div>
-            <div class="banner-controls">
-                <button class="banner-btn" onclick="document.getElementById('bannerUpload').click()">📸 שנה תמונה</button>
-                <input type="file" id="bannerUpload" style="display: none;" accept="image/*" onchange="changeBannerImage(event)">
-            </div>
         </div>
 
-        <!-- Color Picker -->
-        <div class="color-picker-section">
-            <label class="color-picker-label">בחר צבע רקע:</label>
-            <input type="color" class="color-picker-input" id="bgColorPicker" value="#efefef" onchange="changeBackgroundColor(event)">
+        <!-- Typewriter Title -->
+        <div class="typewriter-title">
+            <h1 id="welcomeTitle"></h1>
         </div>
 
         <!-- Main Content -->
@@ -421,13 +462,24 @@
                                 <option value="other">אחר</option>
                             </select>
                         </div>
+                        <div class="form-group">
+                            <label class="form-label">טלפון <span class="optional">(אופציונלי)</span></label>
+                            <input type="tel" class="form-input" name="phone" placeholder="הכנס טלפון">
+                        </div>
+                    </div>
+
+                    <div class="form-row full">
+                        <div class="form-group">
+                            <label class="form-label">אימייל <span class="optional">(אופציונלי)</span></label>
+                            <input type="email" class="form-input" name="email" placeholder="הכנס אימייל">
+                        </div>
                     </div>
 
                     <!-- Categories Section -->
                     <div class="categories-section">
                         <div class="categories-header" onclick="toggleCategories()">
                             <span class="categories-toggle">+</span>
-                            <span class="categories-title">🛍️ בחר קטגוריות שמעניינות אותך</span>
+                            <span class="categories-title">🎁 קטגוריות והטבות שיעניינו אותך</span>
                         </div>
 
                         <div class="categories-grid" id="categoriesGrid">
@@ -435,9 +487,24 @@
                         </div>
                     </div>
 
+                    <!-- Signature Section -->
+                    <div class="signature-section">
+                        <label class="form-label">חתימה <span class="required">*</span></label>
+                        <canvas id="signatureCanvas" class="signature-canvas"></canvas>
+                        <div class="signature-controls">
+                            <button type="button" class="btn-clear" onclick="clearSignature()">🗑️ נקה חתימה</button>
+                        </div>
+                    </div>
+
+                    <!-- Marketing Consent -->
+                    <div class="marketing-consent">
+                        <input type="checkbox" id="marketingConsent" name="marketingConsent">
+                        <label for="marketingConsent">אני מאשר/ת ל-B1 Market לשלוח לי חומר שיווקי והטבות בלעדיות</label>
+                    </div>
+
                     <!-- Submit Button -->
                     <div class="submit-section">
-                        <button type="submit" class="btn-submit">✅ הרשם למועדון</button>
+                        <button type="submit" class="btn-submit" id="submitBtn">✅ הרשם למועדון</button>
                     </div>
                 </form>
             </div>
@@ -447,7 +514,7 @@
     <!-- Success Overlay -->
     <div class="success-overlay" id="successOverlay">
         <div class="success-box">
-            <div class="success-icon">✅</div>
+            <div class="success-icon">🎉</div>
             <div class="success-text">!ברוכים הבאים למועדון</div>
         </div>
     </div>
@@ -470,6 +537,88 @@
         ];
 
         let selectedCategories = [];
+        let isDrawing = false;
+        let hasSigned = false;
+
+        // Signature canvas setup
+        const canvas = document.getElementById('signatureCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = canvas.offsetWidth;
+        canvas.height = 150;
+
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+
+        // Touch events for mobile
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent('mousedown', {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            canvas.dispatchEvent(mouseEvent);
+        });
+
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent('mousemove', {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            canvas.dispatchEvent(mouseEvent);
+        });
+
+        canvas.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            const mouseEvent = new MouseEvent('mouseup', {});
+            canvas.dispatchEvent(mouseEvent);
+        });
+
+        function startDrawing(e) {
+            isDrawing = true;
+            hasSigned = true;
+            const rect = canvas.getBoundingClientRect();
+            ctx.beginPath();
+            ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            const rect = canvas.getBoundingClientRect();
+            ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.stroke();
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+        }
+
+        function clearSignature() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            hasSigned = false;
+        }
+
+        // Typewriter effect
+        function typeWriter(element, text, speed = 100) {
+            let index = 0;
+            element.textContent = '';
+            
+            function type() {
+                if (index < text.length) {
+                    element.textContent += text.charAt(index);
+                    index++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
 
         // Initialize categories grid
         function initCategories() {
@@ -507,27 +656,28 @@
             }
         }
 
-        // Change banner image
-        function changeBannerImage(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    document.getElementById('bannerImage').src = e.target.result;
-                };
-                reader.readAsDataURL(file);
+        // Create confetti
+        function createConfetti() {
+            const colors = ['#20d85b', '#fdf76e', '#ff6b6b', '#4ecdc4', '#45b7d1'];
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDelay = Math.random() * 3 + 's';
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 3000);
             }
-        }
-
-        // Change background color
-        function changeBackgroundColor(event) {
-            const color = event.target.value;
-            document.body.style.background = color;
         }
 
         // Form submission
         document.getElementById('clubForm').addEventListener('submit', function(e) {
             e.preventDefault();
+
+            if (!hasSigned) {
+                alert('נא לחתום על הטופס');
+                return;
+            }
 
             const formData = {
                 firstName: document.querySelector('input[name="firstName"]').value,
@@ -535,16 +685,22 @@
                 idNumber: document.querySelector('input[name="idNumber"]').value,
                 birthDate: document.querySelector('input[name="birthDate"]').value,
                 gender: document.querySelector('select[name="gender"]').value,
-                categories: selectedCategories.map(i => categories[i].name).join(', ')
+                phone: document.querySelector('input[name="phone"]').value,
+                email: document.querySelector('input[name="email"]').value,
+                categories: selectedCategories.map(i => categories[i].name).join(', '),
+                marketingConsent: document.getElementById('marketingConsent').checked,
+                signature: canvas.toDataURL()
             };
 
             console.log('Form Data:', formData);
 
-            // Show success message
+            // Show success message with confetti
+            createConfetti();
             document.getElementById('successOverlay').classList.add('show');
             setTimeout(() => {
                 document.getElementById('successOverlay').classList.remove('show');
                 this.reset();
+                clearSignature();
                 selectedCategories = [];
                 initCategories();
             }, 3000);
@@ -553,6 +709,7 @@
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
             initCategories();
+            typeWriter(document.getElementById('welcomeTitle'), '🎉 ברוכים הבאים למועדון לקוחות B1 Market! 🎉', 80);
         });
     </script>
 </body>
