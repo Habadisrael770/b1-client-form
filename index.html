@@ -1203,6 +1203,68 @@
                 </div>
             </div>
 
+            <!-- 16. פרסום העסק -->
+            <div class="accordion-section" data-section="businessPromotion" data-required="false">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">
+                        <span class="accordion-icon">+</span>
+                        <span>📢 פרסום העסק</span>
+                    </div>
+                    <span class="requirement-badge optional">אופציונלי</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <!-- Advertising Company Selection -->
+                        <div class="form-group">
+                            <label class="form-label">חברת פרסום</label>
+                            <div class="form-grid three">
+                                <label class="option-card">
+                                    <input type="radio" name="advertisingCompany" value="b1" id="adCompanyB1">
+                                    <span>B1</span>
+                                </label>
+                                <label class="option-card">
+                                    <input type="radio" name="advertisingCompany" value="pending" id="adCompanyPending">
+                                    <span>עדיין מטלבת</span>
+                                </label>
+                                <label class="option-card">
+                                    <input type="radio" name="advertisingCompany" value="other" id="adCompanyOther">
+                                    <span>חברה אחרת</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Other Company Name (shown when "Other" is selected) -->
+                        <div class="form-group" id="otherCompanyNameGroup" style="display: none;">
+                            <label class="form-label">שם החברה</label>
+                            <input type="text" class="form-input" id="otherCompanyName" placeholder="לדוגמה: חברת פרסום XYZ">
+                        </div>
+
+                        <!-- Contact Person Details -->
+                        <div class="form-group">
+                            <label class="form-label">פרטי איש קשר</label>
+                            <div class="form-grid two">
+                                <div>
+                                    <label class="form-label">שם איש קשר</label>
+                                    <input type="text" class="form-input" id="adContactName" placeholder="לדוגמה: יוחנן כהן">
+                                </div>
+                                <div>
+                                    <label class="form-label">טלפון</label>
+                                    <input type="tel" class="form-input" id="adContactPhone" placeholder="לדוגמה: 050-1234567">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Suppliers Section -->
+                        <div class="form-group">
+                            <label class="form-label" style="font-weight: 700; margin-bottom: 0.5rem; display: block;">ספקים</label>
+                            <p style="color: var(--gray-dark); margin-bottom: 1rem; font-size: 0.9rem;">נא מלא את הספקים איתם אתה עובד - פרטי איש קשר של הסוכן עבור התמונות</p>
+                            <div id="suppliersContainer"></div>
+                            <button type="button" class="btn-add" onclick="addSupplier()">+ הוסף ספק</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div style="margin-top: 2rem; padding-top: 2rem; border-top: 3px solid var(--gray-medium);">
                 <button type="submit" class="btn-submit">📤 שלח טופס</button>
             </div>
@@ -1238,6 +1300,19 @@
             
             initFillingIndicators();
             initForm();
+            
+            // Add event listeners for advertising company selection
+            const adCompanyRadios = document.querySelectorAll('input[name="advertisingCompany"]');
+            adCompanyRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const otherCompanyNameGroup = document.getElementById('otherCompanyNameGroup');
+                    if (this.value === 'other') {
+                        otherCompanyNameGroup.style.display = 'block';
+                    } else {
+                        otherCompanyNameGroup.style.display = 'none';
+                    }
+                });
+            });
         });
 
         function toggleAccordion(header) {
@@ -1431,6 +1506,40 @@
                     if (section) section.classList.add('filling');
                 });
             });
+        }
+
+        let supplierCount = 0;
+
+        function addSupplier() {
+            supplierCount++;
+            const container = document.getElementById('suppliersContainer');
+            const div = document.createElement('div');
+            div.style.cssText = 'background: #f9f9f9; border: 1px solid #ddd; border-radius: 6px; padding: 1rem; margin-bottom: 1rem;';
+            div.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <label class="form-label" style="margin: 0;">ספק #${supplierCount}</label>
+                    <button type="button" class="btn-remove" onclick="this.closest('div').remove()">מחק</button>
+                </div>
+                <div class="form-grid">
+                    <div>
+                        <label class="form-label">שם הספק</label>
+                        <input type="text" class="form-input" placeholder="לדוגמה: צלם מקצועי" required>
+                    </div>
+                    <div>
+                        <label class="form-label">שם איש קשר</label>
+                        <input type="text" class="form-input" placeholder="לדוגמה: דוד לוי">
+                    </div>
+                    <div>
+                        <label class="form-label">טלפון</label>
+                        <input type="tel" class="form-input" placeholder="לדוגמה: 050-1234567">
+                    </div>
+                    <div>
+                        <label class="form-label">מייל <span style="color: #999;">(אופציונלי)</span></label>
+                        <input type="email" class="form-input" placeholder="לדוגמה: david@example.com">
+                    </div>
+                </div>
+            `;
+            container.appendChild(div);
         }
 
         function generateDeliverySlots() {
