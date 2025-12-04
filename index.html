@@ -1157,7 +1157,13 @@
             initFileUploads();
             initOptions();
             initBranches();
-            initHours();
+            
+            // Ensure DOM is fully ready before initializing hours
+            setTimeout(function() {
+                console.log('Calling initHours from setTimeout');
+                initHours();
+            }, 100);
+            
             initFillingIndicators();
             initForm();
         });
