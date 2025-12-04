@@ -892,7 +892,48 @@
                 </div>
                 <div class="accordion-content">
                     <div class="accordion-body">
-                        <div id="hoursContainer"></div>
+                        <div class="time-slot active">
+                            <input type="checkbox" id="day0" style="width: 20px; height: 20px;" checked>
+                            <label style="font-weight: 600; cursor: pointer;">ראשון</label>
+                            <input type="time" id="open0" value="09:00">
+                            <input type="time" id="close0" value="18:00">
+                        </div>
+                        <div class="time-slot active">
+                            <input type="checkbox" id="day1" style="width: 20px; height: 20px;" checked>
+                            <label style="font-weight: 600; cursor: pointer;">שני</label>
+                            <input type="time" id="open1" value="09:00">
+                            <input type="time" id="close1" value="18:00">
+                        </div>
+                        <div class="time-slot active">
+                            <input type="checkbox" id="day2" style="width: 20px; height: 20px;" checked>
+                            <label style="font-weight: 600; cursor: pointer;">שלישי</label>
+                            <input type="time" id="open2" value="09:00">
+                            <input type="time" id="close2" value="18:00">
+                        </div>
+                        <div class="time-slot active">
+                            <input type="checkbox" id="day3" style="width: 20px; height: 20px;" checked>
+                            <label style="font-weight: 600; cursor: pointer;">רביעי</label>
+                            <input type="time" id="open3" value="09:00">
+                            <input type="time" id="close3" value="18:00">
+                        </div>
+                        <div class="time-slot active">
+                            <input type="checkbox" id="day4" style="width: 20px; height: 20px;" checked>
+                            <label style="font-weight: 600; cursor: pointer;">חמישי</label>
+                            <input type="time" id="open4" value="09:00">
+                            <input type="time" id="close4" value="18:00">
+                        </div>
+                        <div class="time-slot active">
+                            <input type="checkbox" id="day5" style="width: 20px; height: 20px;" checked>
+                            <label style="font-weight: 600; cursor: pointer;">שישי</label>
+                            <input type="time" id="open5" value="09:00">
+                            <input type="time" id="close5" value="18:00">
+                        </div>
+                        <div class="time-slot">
+                            <input type="checkbox" id="day6" style="width: 20px; height: 20px;">
+                            <label style="font-weight: 600; cursor: pointer;">שבת</label>
+                            <input type="time" id="open6" value="09:00" disabled>
+                            <input type="time" id="close6" value="18:00" disabled>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1158,11 +1199,23 @@
             initOptions();
             initBranches();
             
-            // Ensure DOM is fully ready before initializing hours
-            setTimeout(function() {
-                console.log('Calling initHours from setTimeout');
-                initHours();
-            }, 100);
+            // Add event listeners for day checkboxes (0-6 for Sun-Sat)
+            for (let i = 0; i < 7; i++) {
+                const cb = document.getElementById('day' + i);
+                const open = document.getElementById('open' + i);
+                const close = document.getElementById('close' + i);
+                
+                if (cb) {
+                    cb.addEventListener('change', function() {
+                        open.disabled = !this.checked;
+                        close.disabled = !this.checked;
+                        const slot = this.closest('.time-slot');
+                        if (slot) {
+                            slot.classList.toggle('active', this.checked);
+                        }
+                    });
+                }
+            }
             
             initFillingIndicators();
             initForm();
