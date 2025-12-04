@@ -604,10 +604,10 @@
 
         <form class="form-content" id="businessForm">
                         <!-- Welcome Message Section -->
-            <div class="welcome-message" style="background: linear-gradient(135deg, #20d85b 0%, #1aa84a 100%); border-radius: 8px; padding: 2rem; margin-bottom: 2rem; color: white; text-align: center;">
-                <h2 style="margin: 0 0 1rem 0; font-size: 1.8rem; font-weight: 700;">שלום וברוכים הבאים ל-B1 Market 👋</h2>
-                <p style="margin: 0.5rem 0; font-size: 1.1rem; line-height: 1.6;">נא מלאו בקפידה את הפרטים בטופס</p>
-                <p style="margin: 0.5rem 0; font-size: 1rem;">בהצלחה לכתוב ✨</p>
+            <div class="welcome-message" style="background: linear-gradient(135deg, #20d85b 0%, #1aa84a 100%); border-radius: 8px; padding: 2rem; margin-bottom: 2rem; color: white; text-align: center; min-height: 150px;">
+                <h2 id="welcomeTitle" style="margin: 0 0 1rem 0; font-size: 1.8rem; font-weight: 700; min-height: 60px;"></h2>
+                <p id="welcomeText1" style="margin: 0.5rem 0; font-size: 1.1rem; line-height: 1.6; min-height: 30px;"></p>
+                <p id="welcomeText2" style="margin: 0.5rem 0; font-size: 1rem; min-height: 30px;"></p>
             </div>
 
                         <!-- Instructions Section -->
@@ -1356,7 +1356,37 @@
     <script>
         let branchCount = 0;
 
+        // Typewriter animation function
+        function typeWriter(element, text, speed = 50, callback = null) {
+            let index = 0;
+            element.textContent = '';
+            
+            function type() {
+                if (index < text.length) {
+                    element.textContent += text.charAt(index);
+                    index++;
+                    setTimeout(type, speed);
+                } else if (callback) {
+                    callback();
+                }
+            }
+            type();
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
+            // Start typewriter animation for welcome message
+            const welcomeTitle = document.getElementById('welcomeTitle');
+            const welcomeText1 = document.getElementById('welcomeText1');
+            const welcomeText2 = document.getElementById('welcomeText2');
+            
+            if (welcomeTitle && welcomeText1 && welcomeText2) {
+                typeWriter(welcomeTitle, 'שלום וברוכים הבאים ל-B1 Market 👋', 50, function() {
+                    typeWriter(welcomeText1, 'נא מלאו בקפידה את הפרטים בטופס', 40, function() {
+                        typeWriter(welcomeText2, 'בהצלחה לכתוב ✨', 40);
+                    });
+                });
+            }
+            
             initAccordions();
             initFileUploads();
             initOptions();
